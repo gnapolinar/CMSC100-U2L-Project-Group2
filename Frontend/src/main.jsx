@@ -1,16 +1,16 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
-import Root from './Frontend/components/Root';
-import Home from './Frontend/pages/Home';
-import Shop from './Frontend/pages/Shop';
-import LogIn from './Frontend/pages/Login';
-import SignUp from './Frontend/pages/Signup';
-import Orders from './Frontend/pages/Orders';
-import Account from './Frontend/pages/Account';
-import Cart from './Frontend/pages/Cart';
-import Dashboard from './Frontend/pages/Dashboard';
-import MerchantOrders from './Frontend/pages/Orders_MerchantView'
+import Root from './components/Root';
+import Home from './pages/Home';
+import Shop from './pages/Shop';
+import LogIn from './pages/LogIn';
+import SignUp from './pages/SignUp';
+import Orders from './pages/Orders';
+import Account from './pages/Account';
+import Cart from './pages/Cart';
+import Dashboard from './pages/Dashboard';
+import MerchantOrders from './pages/Orders_MerchantView'
 import './index.css';
 
 const isUserSignedIn = !!localStorage.getItem('token');
