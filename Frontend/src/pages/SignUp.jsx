@@ -1,6 +1,9 @@
 import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import axios from 'axios'
+import { Cookies } from 'react-cookie'
+
+const cookies = new Cookies();
 
 const SignUp = () => {
   const [firstName, setFirstName] = useState('')
@@ -13,6 +16,8 @@ const SignUp = () => {
 
   useEffect(() => {
     fetchUsers();
+    const token = cookies.get('token')
+    console.log(token)
   }, []);
 
   const fetchUsers = () => {
