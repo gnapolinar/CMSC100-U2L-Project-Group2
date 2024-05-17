@@ -1,53 +1,102 @@
 import { useState, useEffect } from 'react';
 import axios from 'axios';
+import { jwtDecode } from 'jwt-decode';
+import { Cookies } from 'react-cookie';
+
+const cookies = new Cookies();
 
 const Cart = () => {
   const [cartItems, setCartItems] = useState([]);
   const [isConfirmationOpen, setIsConfirmationOpen] = useState(false);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
-    const cart = JSON.parse(localStorage.getItem('cart')) || [];
-    setCartItems(cart);
+    fetchCartItems();
   }, []);
 
-  const removeFromCart = (productId) => {
-    const updatedCart = cartItems.filter((item) => item.productID !== productId);
-    setCartItems(updatedCart);
-    localStorage.setItem('cart', JSON.stringify(updatedCart));
+  const fetchCartItems = async () => {
+    try {
+        const token = cookies.get('token')
+        if (!token) {
+            setError('User not logged in');
+            return;
+        }
+
+        const decodedToken = jwtDecode(token);
+        const userId = decodedToken.userId;
+
+        const response = await axios.get(`http://localhost:4000/api/cart?userId=${userId}`, {
+            headers: { Authorization: `Bearer ${token}` }
+        });
+        setCartItems(response.data.filter(item => item.product));
+        setError(null);
+    } catch (error) {
+        console.error('Error fetching cart items:', error);
+        setError('Error fetching cart items. Please try again later.');
+    }
+};
+
+  const removeFromCart = async (productId) => {
+    try {
+      const token = cookies.get('token')
+      if (!token) {
+        setError('User not logged in');
+        return;
+      }
+  
+      await axios.delete(`http://localhost:4000/api/cart/${productId}`, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      fetchCartItems();
+    } catch (error) {
+      console.error('Error removing item from cart:', error);
+      setError('Error removing item from cart. Please try again later.');
+    }
   };
 
-  const updateQuantity = (productId, newQuantity) => {
-    const updatedCart = cartItems.map((item) =>
-      item.productID === productId ? { ...item, quantity: newQuantity } : item
-    );
-    setCartItems(updatedCart);
-    localStorage.setItem('cart', JSON.stringify(updatedCart));
-  };
+  const updateQuantity = async (productId, newQuantity) => {
+    try {
+        const token = cookies.get('token')
+        if (!token) {
+            setError('User not logged in');
+            return;
+        }
 
-  const calculateTotalItems = () => {
-    return cartItems.reduce((total, item) => total + item.quantity, 0);
-  };
+        if (newQuantity <= 0) {
+            await removeFromCart(productId);
+            return;
+        }
+
+        await axios.put(`http://localhost:4000/api/cart/${productId}`, {
+            quantity: newQuantity
+        }, {
+            headers: { Authorization: `Bearer ${token}` }
+        });
+
+        fetchCartItems();
+    } catch (error) {
+        console.error('Error updating item quantity:', error);
+        setError('Error updating item quantity. Please try again later.');
+    }
+};
 
   const handleConfirmOrder = () => {
     setIsConfirmationOpen(true);
   };
 
-const proceedWithOrder = async () => {
+  const proceedWithOrder = async () => {
     try {
-    const orders = cartItems.map(item => {
-        return {
-          productID: item.productID,
-          orderQty: item.quantity,
-          email: localStorage.getItem('email'),
-        };
+      const token = cookies.get('token')
+      if (!token) {
+        setError('User not logged in');
+        return;
+      }
+  
+      const response = await axios.post('http://localhost:4000/api/orders', {}, {
+        headers: { Authorization: `Bearer ${token}` }
       });
-
-      console.log(localStorage.getItem('email'));
   
-      const response = await axios.post('http://localhost:4000/api/orders', orders);
-  
-      if (response.status == 201) {
-        localStorage.removeItem('cart');
+      if (response.status === 201) {
         setCartItems([]);
         setIsConfirmationOpen(false);
         alert('Order placed successfully!');
@@ -56,45 +105,53 @@ const proceedWithOrder = async () => {
       }
     } catch (error) {
       console.error('Error placing order:', error);
-      alert('Failed to place order. Please try again later.');
+      setError('Error placing order. Please try again later.');
     }
   };
-  
+
+  const total = cartItems.reduce((acc, item) => {
+    return acc + (item.product ? item.quantity * item.product.productPrice : 0);
+  }, 0);
 
   return (
     <div>
+      <h2>Your Cart</h2>
+      {error && <p>{error}</p>}
+        <ul>
+          {cartItems.map((item) => (
+            <li key={item.product?._id}>
+              {item.product ? (
+                <>
+                  {item.product.productName} - {item.quantity} x ${item.product.productPrice}
+                  <button onClick={() => removeFromCart(item.product._id)}>Remove</button>
+                  <input
+                    type="number"
+                    value={item.quantity}
+                    onChange={(e) => updateQuantity(item.product._id, parseInt(e.target.value))}
+                    style={{ width: '50px' }}
+                  />
+                </>
+              ) : (
+                <span>Product information not available</span>
+              )}
+            </li>
+          ))}
+        </ul>
+
       {cartItems.length > 0 ? (
-        <div>
-          <ul>
-            {cartItems.map((item) => (
-              <li key={item.productID}>
-                {item.productName} - {item.productDesc} - Quantity: {item.quantity}
-                <button onClick={() => removeFromCart(item.productID)}>Remove</button>
-                <input
-                  type="number"
-                  value={item.quantity}
-                  onChange={(e) => updateQuantity(item.productID, parseInt(e.target.value))}
-                  min="1"
-                />
-              </li>
-            ))}
-          </ul>
-          <p>Total Items: {calculateTotalItems()}</p>
+        <>
+          <p>Total Price: ${total.toFixed(2)}</p>
           <button onClick={handleConfirmOrder}>Confirm Order</button>
           {isConfirmationOpen && (
-            <div className="modal">
-              <div className="modal-content">
-                <p>Are you sure you want to proceed with the order?</p>
-                <div className="modal-buttons">
-                  <button onClick={proceedWithOrder}>Yes</button>
-                  <button onClick={() => setIsConfirmationOpen(false)}>No</button>
-                </div>
-              </div>
+            <div>
+              <p>Are you sure you want to place the order?</p>
+              <button onClick={proceedWithOrder}>Yes</button>
+              <button onClick={() => setIsConfirmationOpen(false)}>No</button>
             </div>
           )}
-        </div>
+        </>
       ) : (
-        <p>Your cart is empty.</p>
+        <p>The cart is empty. Add now!</p> 
       )}
     </div>
   );

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import Management from '../components/Management'
 import ProductList from '../components/ProductList'
 
@@ -18,7 +18,6 @@ const Dashboard = () => {
   return (
     <div>
         <Management />
-        <h1>Dashboard</h1>
         <ProductList
             products={products}
             onAddProduct={handleAddProduct}

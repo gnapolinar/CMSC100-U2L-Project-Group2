@@ -1,44 +1,55 @@
-import React, { useState } from 'react';
+import { useState, useEffect } from 'react';
+import axios from 'axios';
 
 const Management = () => {
-  const [users, setUsers] = useState([
-    { id: 1, firstName: 'John', lastName: 'Doe', email: 'john@example.com', userType: 'Customer' },
-    { id: 2, firstName: 'Jane', lastName: 'Smith', email: 'jane@example.com', userType: 'Customer' },
-    { id: 3, firstName: 'Admin', lastName: 'User', email: 'admin@example.com', userType: 'Admin' }
-  ]);
-  const [totalUsers] = useState(users.length);
+  const [users, setUsers] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
-  const deleteUser = (userId) => {
-    setUsers(users.filter(user => user.id !== userId));
-  };
+  useEffect(() => {
+    const fetchUsers = async () => {
+      try {
+        const response = await axios.get('http://localhost:4000/api/users');
+        setUsers(response.data);
+        setLoading(false);
+      } catch (err) {
+        setError('Error fetching users');
+        setLoading(false);
+      }
+    };
+
+    fetchUsers();
+  }, []);
+
+  if (loading) {
+    return <div>Loading...</div>;
+  }
+
+  if (error) {
+    return <div>{error}</div>;
+  }
 
   return (
     <div>
       <h2>User Management</h2>
-      <p>Total Users: {totalUsers}</p>
       <table>
         <thead>
           <tr>
             <th>Name</th>
             <th>Email</th>
             <th>User Type</th>
-            <th>Action</th>
           </tr>
         </thead>
         <tbody>
           {users.map(user => (
-            <tr key={user.id}>
+            <tr key={user._id}>
               <td>{user.firstName} {user.lastName}</td>
               <td>{user.email}</td>
-              <td>{user.userType}</td>
-              <td>
-                {user.userType === 'Admin' ? null : (
-                  <button onClick={() => deleteUser(user.id)}>Delete</button>
-                )}
-              </td>
+              <td>{user.userType.charAt(0).toUpperCase() + user.userType.slice(1)}</td>
             </tr>
           ))}
         </tbody>
+        <p>Total Users: {users.length}</p>
       </table>
     </div>
   );

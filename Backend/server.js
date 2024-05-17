@@ -1,16 +1,17 @@
-/* eslint-disable no-unused-vars */
 import express from 'express';
 import mongoose from 'mongoose';
 import cors from 'cors';
-import bodyParser from 'body-parser';
+import cookieParser from 'cookie-parser';
 import registerRoutes from './route.js';
 
 const app = express();
 const dbURI = 'mongodb://localhost:27017/FarmToTableDatabase';
 const PORT = 4000;
 
-app.use(bodyParser.json());
 app.use(cors());
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+app.use(cookieParser());
 
 mongoose.connect(dbURI)
   .then(() => {
@@ -18,6 +19,5 @@ mongoose.connect(dbURI)
     app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
   })
   .catch((err) => console.error(err));
-
 
 registerRoutes(app);
