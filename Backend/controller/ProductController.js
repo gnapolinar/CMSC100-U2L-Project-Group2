@@ -22,6 +22,7 @@ export const addProduct = async (req, res) => {
             productDesc: req.body.productDesc,
             productType: req.body.productType,
             productQty: req.body.productQty,
+            productPrice: req.body.productPrice
         });
         await newProduct.save();
         console.log('Product added successfully:', newProduct);
@@ -31,6 +32,7 @@ export const addProduct = async (req, res) => {
         res.status(500).json({ message: 'Server Error' });
     }
 };
+
 
 export const updateProduct = async (req, res) => {
     try {
