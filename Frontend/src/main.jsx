@@ -14,7 +14,7 @@ import MerchantOrders from './pages/Orders_MerchantView';
 import Error from './pages/Error';
 import { Cookies } from 'react-cookie';
 import axios from 'axios';
-import { jwtDecode } from 'jwt-decode'; // Fix import statement
+import { jwtDecode } from 'jwt-decode';
 import './index.css';
 
 const cookies = new Cookies();
@@ -34,7 +34,6 @@ const App = () => {
       }
     };
 
-    // Fetch user data only if user is signed in
     if (isUserSignedIn) {
       const token = cookies.get('token');
       const decodedToken = jwtDecode(token);
@@ -43,9 +42,8 @@ const App = () => {
         fetchUserData(userId);
       }
     }
-  }, []); // Empty dependency array to run the effect only once after component mounts
+  }, []);
 
-  // Define router after userType is set
   const router = createBrowserRouter([
     {
       path: '/',
