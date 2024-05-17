@@ -27,7 +27,7 @@ export const getCartItems = async (req, res) => {
 };
 
 
-  export const addToCart = async (req, res) => {
+export const addToCart = async (req, res) => {
     try {
         const { productId, quantity, userId } = req.body;
 
@@ -39,25 +39,23 @@ export const getCartItems = async (req, res) => {
             return res.status(400).json({ message: 'Invalid product ID.' });
         }
 
-        const product = await Product.findOne({ productID: productId });
+        const product = await Product.findById(productId);
 
         if (!product) {
             return res.status(404).json({ message: 'Product not found.' });
         }
-
-        const objectIdProductId = product._id;
 
         let cart = await Cart.findOne({ user: userId });
         if (!cart) {
             cart = new Cart({ user: userId, items: [] });
         }
 
-        const productIndex = cart.items.findIndex(item => item.product.toString() === objectIdProductId.toString());
+        const existingCartItem = cart.items.find(item => item.product.toString() === productId.toString());
 
-        if (productIndex > -1) {
-            cart.items[productIndex].quantity += quantity;
+        if (existingCartItem) {
+            existingCartItem.quantity += quantity;
         } else {
-            cart.items.push({ product: objectIdProductId, quantity });
+            cart.items.push({ product: productId, quantity });
         }
 
         await cart.save();
@@ -67,6 +65,7 @@ export const getCartItems = async (req, res) => {
         res.status(500).json({ message: 'Internal server error.' });
     }
 };
+
 
 export const removeFromCart = async (req, res) => {
     try {
