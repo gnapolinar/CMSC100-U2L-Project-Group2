@@ -1,11 +1,11 @@
 import User from '../model/UserSchema.js';
+import Cart from '../model/CartSchema.js';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
-import Cart from '../model/CartSchema.js';
-import dotenv from 'dotenv';
+import { jwtDecode } from 'jwt-decode'
+import { v4 as uuidv4 } from 'uuid';
 
-dotenv.config();
-const secretKey = process.env.JWT_SECRET;
+const secretKey = uuidv4();
 
 export const getUserData = async (req, res) => {
   try {
@@ -22,7 +22,7 @@ export const getUserData = async (req, res) => {
       return res.status(401).json({ message: 'No token provided' });
     }
 
-    const decodedToken = jwt.verify(token, secretKey);
+    const decodedToken = jwtDecode(token)
     const userId = decodedToken.userId;
 
     const user = await User.findById(userId);
@@ -94,7 +94,7 @@ export const updateUserPassword = async (req, res) => {
       return res.status(401).json({ error: 'Unauthorized' });
     }
 
-    const decodedToken = jwt.verify(token.split(' ')[1], secretKey);
+    const decodedToken = jwtDecode(token.split(' ')[1]);
     const userId = decodedToken.userId;
 
     const user = await User.findById(userId);
