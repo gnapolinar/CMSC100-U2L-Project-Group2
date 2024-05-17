@@ -39,14 +39,12 @@ export const placeOrder = async (req, res) => {
             }
         });
 
-        // Filter out null values from the orders array
         const validOrders = orders.filter(order => order !== null);
 
         if (validOrders.length === 0) {
             return res.status(400).json({ message: 'No valid orders found.' });
         }
 
-        // Insert valid orders into the database
         await Order.insertMany(validOrders);
 
         const orderedProductIds = validOrders.map(order => order.productID);
