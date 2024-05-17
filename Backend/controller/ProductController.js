@@ -1,5 +1,4 @@
 import Product from '../model/ProductSchema.js';
-import { v4 as uuidv4 } from 'uuid';
 
 export const getProducts = async (req, res) => {
     try {
@@ -17,7 +16,6 @@ export const addProduct = async (req, res) => {
         console.log('Request Body:', req.body);
 
         const newProduct = new Product({
-            productID: uuidv4(),
             productName: req.body.productName,
             productDesc: req.body.productDesc,
             productType: req.body.productType,
@@ -46,6 +44,7 @@ export const updateProduct = async (req, res) => {
                 productDesc: req.body.productDesc,
                 productType: req.body.productType,
                 productQty: req.body.productQty,
+                productPrice: req.body.productPrice,
             },
             { new: true }
         );
