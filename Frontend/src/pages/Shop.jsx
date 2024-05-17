@@ -1,5 +1,9 @@
 import { useState, useEffect } from 'react';
 import axios from 'axios';
+import { jwtDecode } from 'jwt-decode';
+import { Cookies } from 'react-cookie';
+
+const cookies = new Cookies();
 
 const Shop = () => {
   const [products, setProducts] = useState([]);
@@ -23,18 +27,40 @@ const Shop = () => {
     }
   };
 
-  const addToCart = (product) => {
-    const productId = product.productID;
-    const newQuantity = quantity[productId] || 1;
-    const cart = JSON.parse(localStorage.getItem('cart')) || [];
-    const existingIndex = cart.findIndex(item => item.productID === productId);
-    if (existingIndex !== -1) {
-      cart[existingIndex].quantity += newQuantity;
-    } else {
-      cart.push({ ...product, productID: productId, quantity: newQuantity });
+  const addToCart = async (product) => {
+    try {
+      const token = cookies.get('token');
+      if (!token) {
+        throw new Error('User not logged in');
+      }
+
+      const decodedToken = jwtDecode(token);
+      const userId = decodedToken.userId;
+
+      if (!product._id) {
+        throw new Error('Product ID is missing');
+      }
+
+      const response = await axios.post(
+        'http://localhost:4000/api/cart',
+        {
+          userId: userId,
+          productId: product._id,
+          quantity: quantity[product.productID] || 1,
+        },
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
+
+      if (response.status === 200) {
+        console.log(`Added to cart: ${product.productName} - Quantity: ${quantity[product.productID]}`);
+      } else {
+        throw new Error('Failed to add product to cart');
+      }
+    } catch (error) {
+      console.error('Error adding product to cart:', error);
     }
-    localStorage.setItem('cart', JSON.stringify(cart));
-    console.log(`Added to cart: ${product.productName} - Quantity: ${newQuantity}`);
   };
 
   return (
@@ -59,7 +85,7 @@ const Shop = () => {
           ))}
         </ul>
       ) : (
-        <p>There are currently no items.</p>
+        <p>Loading...</p>
       )}
     </div>
   );
