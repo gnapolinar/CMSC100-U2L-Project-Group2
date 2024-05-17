@@ -1,4 +1,3 @@
-// CartController.js
 import Cart from '../model/CartSchema.js';
 import Product from '../model/ProductSchema.js';
 import mongoose from 'mongoose';
@@ -32,45 +31,35 @@ export const getCartItems = async (req, res) => {
     try {
         const { productId, quantity, userId } = req.body;
 
-        // Check if userId, productId, and quantity are provided
         if (!userId || !productId || !quantity) {
             return res.status(400).json({ message: 'User ID, product ID, and quantity are required.' });
         }
 
-        // Check if productId is a valid ObjectId
         if (!mongoose.Types.ObjectId.isValid(productId)) {
             return res.status(400).json({ message: 'Invalid product ID.' });
         }
 
-        // Query the Product collection to find the product based on productId
         const product = await Product.findOne({ productID: productId });
 
-        // Check if product exists
         if (!product) {
             return res.status(404).json({ message: 'Product not found.' });
         }
 
-        // Extract the ObjectId reference from the product document
         const objectIdProductId = product._id;
 
         let cart = await Cart.findOne({ user: userId });
-
-        // If cart doesn't exist for user, create a new one
         if (!cart) {
             cart = new Cart({ user: userId, items: [] });
         }
 
-        // Check if product already exists in cart
         const productIndex = cart.items.findIndex(item => item.product.toString() === objectIdProductId.toString());
 
-        // Update quantity if product exists, otherwise add new product to cart
         if (productIndex > -1) {
             cart.items[productIndex].quantity += quantity;
         } else {
             cart.items.push({ product: objectIdProductId, quantity });
         }
 
-        // Save cart to database
         await cart.save();
         res.status(200).json(cart.items);
     } catch (err) {
