@@ -39,9 +39,17 @@ export const placeOrder = async (req, res) => {
             }
         });
 
-        await Order.insertMany(orders);
+        // Filter out null values from the orders array
+        const validOrders = orders.filter(order => order !== null);
 
-        const orderedProductIds = orders.map(order => order.productID);
+        if (validOrders.length === 0) {
+            return res.status(400).json({ message: 'No valid orders found.' });
+        }
+
+        // Insert valid orders into the database
+        await Order.insertMany(validOrders);
+
+        const orderedProductIds = validOrders.map(order => order.productID);
         await Cart.updateOne(
             { user: userId },
             { $pull: { items: { product: { $in: orderedProductIds } } } }
@@ -53,6 +61,7 @@ export const placeOrder = async (req, res) => {
         return res.status(500).json({ message: 'Server Error' });
     }
 };
+
 
 export const removeOrder = async (req, res) => {
     try {
