@@ -1,4 +1,3 @@
-// UserController.js
 import User from '../model/UserSchema.js';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
@@ -10,7 +9,6 @@ const secretKey = process.env.JWT_SECRET;
 
 export const getUserData = async (req, res) => {
   try {
-    // Extract token from the cookies
     let token = null;
     const cookies = req.cookies;
     Object.keys(cookies).forEach(cookieKey => {
@@ -32,7 +30,6 @@ export const getUserData = async (req, res) => {
       return res.status(404).json({ message: 'User not found' });
     }
 
-    // Set content type header
     res.setHeader('Content-Type', 'application/json');
 
     res.json({ userType: user.userType, email: user.email });
@@ -65,10 +62,7 @@ export const loginUser = async (req, res) => {
 
     const token = jwt.sign({ userId: user._id }, secretKey, { expiresIn: '1h' });
 
-    // Set Content-Type header
     res.setHeader('Content-Type', 'application/json');
-
-    // Set the authToken cookie
     res.cookie(`user_${user._id}_token`, token, { httpOnly: true, maxAge: 3600000, path: '/' });
 
     return res.status(200).json({ success: true, token, userId: user._id, userType: user.userType });
@@ -100,20 +94,16 @@ export const updateUserPassword = async (req, res) => {
       return res.status(401).json({ error: 'Unauthorized' });
     }
 
-    // Verify the token and extract user ID
     const decodedToken = jwt.verify(token.split(' ')[1], secretKey);
     const userId = decodedToken.userId;
 
-    // Find the user by userId
     const user = await User.findById(userId);
     if (!user) {
       return res.status(404).json({ error: 'User not found' });
     }
 
-    // Ensure that the currentPassword is a string
     const currentPassword = String(req.body.currentPassword);
 
-    // Verify the current password
     let isPasswordValid = false;
     if (user.userType === 'customer') {
       isPasswordValid = await bcrypt.compare(currentPassword, user.password);
@@ -125,13 +115,11 @@ export const updateUserPassword = async (req, res) => {
       return res.status(401).json({ error: 'Incorrect current password' });
     }
 
-    // Hash the new password if the user is a customer
     let hashedNewPassword = req.body.newPassword;
     if (user.userType === 'customer') {
       hashedNewPassword = await bcrypt.hash(req.body.newPassword, 10);
     }
 
-    // Update the user's password
     user.password = hashedNewPassword;
     await user.save();
 
@@ -153,13 +141,9 @@ export const registerUser = async (req, res) => {
     } else {
       const newUser = new User({ firstName, middleName, lastName, userType: isMerchant ? 'merchant' : 'customer', email, password: hashedPassword });
 
-      // Save the new user
       await newUser.save();
 
-      // Create a shopping cart for the new user
       const newCart = new Cart({ user: newUser._id, items: [] });
-
-      // Save the new cart
       await newCart.save();
 
       res.status(201).json({ message: 'User registered successfully.' });
