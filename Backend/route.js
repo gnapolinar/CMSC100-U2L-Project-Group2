@@ -1,4 +1,4 @@
-import { placeOrder, removeOrder, getOrders } from './controller/OrderController.js';
+import { placeOrder, removeOrder, getOrders, salesReport, updateOrder } from './controller/OrderController.js';
 import { getProducts, addProduct, updateProduct, removeProduct } from './controller/ProductController.js';
 import { registerUser, loginUser, getUsers, getUserData, updateUser, updateUserPassword, getUserById } from './controller/UserController.js';
 import { getCartItems, addToCart, removeFromCart, updateCartItemQuantity } from './controller/CartController.js';
@@ -21,6 +21,8 @@ const routes = (app) => {
   app.route('/api/orders').post(placeOrder);
   app.route('/api/orders/:transactionID').delete(removeOrder);
   app.route('/api/orders').get(getOrders);
+  app.route('/api/orders/:transactionID').put(updateOrder);
+  app.route('/api/sales-report').get(salesReport);
 
   app.route('/api/userdata').get(getUserData);
   app.route('/api/users/:userId').put(updateUser);
