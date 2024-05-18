@@ -80,6 +80,7 @@ export default function Root() {
                                 <>
                                     <li><Link to={`/dashboard`}>Dashboard</Link></li>
                                     <li><Link to={`/merchantorders`}>Orders</Link></li>
+                                    <li><Link to={`/salesreports`}>Sales Report</Link></li>
                                 </>
                             )}
                         </>

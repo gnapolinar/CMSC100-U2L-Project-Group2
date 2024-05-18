@@ -11,6 +11,7 @@ import Account from './pages/Account';
 import Cart from './pages/Cart';
 import Dashboard from './pages/Dashboard';
 import MerchantOrders from './pages/Orders_MerchantView';
+import SalesReports from './pages/SalesReport';
 import Error from './pages/Error';
 import { Cookies } from 'react-cookie';
 import axios from 'axios';
@@ -57,7 +58,8 @@ const App = () => {
         { path: 'cart', element: isUserSignedIn && userType === 'customer' ? <Cart /> : <Error /> },
         { path: 'orders', element: isUserSignedIn && userType === 'customer' ? <Orders /> : <Error /> },
         { path: 'shop', element: isUserSignedIn && userType === 'customer' ? <Shop /> : <Error /> },
-        { path: 'merchantorders', element: isUserSignedIn && userType === 'merchant' ? <MerchantOrders /> : <Error /> }
+        { path: 'merchantorders', element: isUserSignedIn && userType === 'merchant' ? <MerchantOrders /> : <Error /> },
+        { path: 'salesreports', element: isUserSignedIn && userType === 'merchant' ? <SalesReports /> : null }
       ]
     }
   ]);
