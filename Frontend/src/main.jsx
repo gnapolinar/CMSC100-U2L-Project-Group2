@@ -59,7 +59,7 @@ const App = () => {
         { path: 'orders', element: isUserSignedIn && userType === 'customer' ? <Orders /> : <Error /> },
         { path: 'shop', element: isUserSignedIn && userType === 'customer' ? <Shop /> : <Error /> },
         { path: 'merchantorders', element: isUserSignedIn && userType === 'merchant' ? <MerchantOrders /> : <Error /> },
-        { path: 'salesreports', element: isUserSignedIn && userType === 'merchant' ? <SalesReports /> : null }
+        { path: 'salesreports', element: isUserSignedIn && userType === 'merchant' ? <SalesReports /> : <Error /> }
       ]
     }
   ]);
