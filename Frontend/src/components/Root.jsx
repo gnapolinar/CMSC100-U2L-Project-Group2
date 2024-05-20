@@ -1,13 +1,17 @@
 import { useEffect, useState, useCallback } from 'react';
-import { Outlet, Link, useNavigate } from 'react-router-dom';
+import { Outlet, Link, useNavigate, useLocation } from 'react-router-dom';
 import { jwtDecode } from 'jwt-decode';
 import { Cookies } from 'react-cookie';
 import axios from 'axios';
+import Logo from '../pictures/homepage_logo.png';
 
 const cookies = new Cookies();
 
 export default function Root() {
     const navigate = useNavigate();
+    const location = useLocation();
+    const [userType, setUserType] = useState(null);
+    const [navbarColor, setNavbarColor] = useState('transparent');
 
     const handleSignout = useCallback(() => {
         cookies.remove('token', { path: '/' });
@@ -15,8 +19,6 @@ export default function Root() {
         navigate('/login');
         window.location.reload();
     }, [navigate]);
-
-    const [userType, setUserType] = useState(null);
 
     useEffect(() => {
         const checkTokenExpiration = () => {
@@ -36,6 +38,7 @@ export default function Root() {
                 }
             }
         };
+
         const token = cookies.get('token');
         if (token) {
             const decodedToken = jwtDecode(token);
@@ -58,59 +61,72 @@ export default function Root() {
         }
     };
 
+    useEffect(() => {
+        const changeNavbarColor = () => {
+            if (window.scrollY >= 80) {
+                setNavbarColor('#323131'); 
+            } else {
+                setNavbarColor('transparent');
+            }
+        };
+
+        const validPaths = ['/', '/login', '/signup'];
+        if (validPaths.includes(location.pathname)) {
+            window.addEventListener('scroll', changeNavbarColor);
+            return () => {
+                window.removeEventListener('scroll', changeNavbarColor);
+            };
+        } else {
+            setNavbarColor('#323131'); 
+        }
+    }, [location.pathname]);
 
     const isUserSignedIn = !!cookies.get('token');
 
     return (
         <>
-            <nav className='navigation-bar'>
-                <ul className='ul-1'>
-                    <li className='website-name'><Link to={`/`}>Farm to Shelf</Link></li>
-                </ul>
-                <ul className='ul-2'>
-                    {isUserSignedIn && (
-                        <>
-                            {userType === 'customer' && (
-                                <>
-                                    <li><Link to={`/shop`}>Shop</Link></li>
-                                    <li><Link to={`/cart`}>Cart</Link></li>
-                                </>
-                            )}
-                            {userType === 'merchant' && (
-                                <>
-                                    <li><Link to={`/dashboard`}>Dashboard</Link></li>
-                                    <li><Link to={`/merchantorders`}>Orders</Link></li>
-                                    <li><Link to={`/salesreports`}>Sales Report</Link></li>
-                                </>
-                            )}
-                        </>
-                    )}
-                </ul>
+            <nav className='navigation-bar' style={{ backgroundColor: navbarColor }}>
+                <div className='logo-container'>
+                    <img className='logo' src={Logo} alt='Website Logo'></img>
+                    <a className='website-name' href="/">Farm to Shelf</a>
+                </div>
+                <div className='center-links'>
+                    <ul className='ul-2'>
+                        {isUserSignedIn && (
+                            <>
+                                {userType === 'customer' && (
+                                    <>
+                                        <li><Link to={`/shop`}>Shop</Link></li>
+                                        <li><Link to={`/cart`}>Cart</Link></li>
+                                        <li><Link to={`/account`}>Account</Link></li>
+                                        <li><Link to={`/orders`}>Orders</Link></li>
+                                    </>
+                                )}
+                                {userType === 'merchant' && (
+                                    <>
+                                        <li><Link to={`/dashboard`}>Dashboard</Link></li>
+                                        <li><Link to={`/merchantorders`}>Orders</Link></li>
+                                        <li><Link to={`/account`}>Account</Link></li>
+                                    </>
+                                )}
+                            </>
+                        )}
+                    </ul>
+                </div>
                 <ul className='ul-3'>
                     {isUserSignedIn ? (
                         <>
-                            {userType === 'customer' && (
-                                <>
-                                    <li><Link to={`/account`}>Account</Link></li>
-                                    <li><Link to={`/orders`}>Orders</Link></li>
-                                    <li><button onClick={handleSignout}>Sign Out</button></li>
-                                </>
-                            )}
-                            {userType === 'merchant' && (
-                                <>
-                                    <li><Link to={`/account`}>Account</Link></li>
-                                    <li><button onClick={handleSignout}>Sign Out</button></li>
-                                </>
-                            )}
+                            <li className='logout-button'><button onClick={handleSignout}>Logout</button></li>
                         </>
                     ) : (
                         <>
-                            <li><Link to={`/login`}>Log In</Link></li>
-                            <li><Link to={`/signup`}>Sign Up</Link></li>
+                            <li className="signup-link"><Link to={`/signup`}>Sign Up</Link></li>
+                            <li><Link className="login-button" to={`/login`}>Log In</Link></li>
                         </>
                     )}
                 </ul>
             </nav>
+
             <Outlet />
             <footer className="footer">
                 <p className='footer-content1'>© 2024 Farm to Shelf. All rights reserved.</p>
