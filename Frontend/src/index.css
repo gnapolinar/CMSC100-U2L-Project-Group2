@@ -148,3 +148,111 @@ body {
 .footer-content2 {
     margin-top: 5px;
 }
+
+/* ADMIN DASHBOARD COMPONENTS */
+.dashboard-title {
+    font-size: 30px;
+    font-weight: bold;
+    margin: 20px 0;
+    color: #323131;
+}
+
+/* Breadcrumb styling */
+.breadcrumb {
+    margin: 20px;
+    padding-left: 20px;
+}
+  
+/* Table styles */
+.product-listing {
+    width: 90%;
+    margin: 20px auto;
+    border-collapse: collapse;
+}
+
+.product-listing th,
+.product-listing td {
+    text-align: left;
+    padding: 12px;
+    border-bottom: 1px solid #ddd;
+}
+
+.product-listing th {
+    background-color: #f5f5f5;
+}
+
+.product-listing tr:hover {
+    background-color: #f5f5f5;
+}
+
+/* Action buttons styling */
+.action-buttons {
+    display: flex;
+    justify-content: flex-start;
+}
+
+.action-buttons button {
+    padding: 6px 12px;
+    margin-right: 8px;
+    border: none;
+    cursor: pointer;
+    color: #323131;
+    border-radius: 4px;
+    font-size: 14px;
+    text-transform: uppercase;
+    font-weight: bold;
+}
+
+.action-buttons .edit-button {
+    background-color: #4caf50;
+}
+
+.action-buttons .save-button {
+    background-color: #4caf50;
+}
+
+.add-button {
+    padding: 6px 12px;
+    margin-right: 8px;
+    border: none;
+    cursor: pointer;
+    color: #323131;
+    border-radius: 4px;
+    font-size: 14px;
+    text-transform: uppercase;
+    font-weight: bold;
+    background-color: #4caf50;
+}
+
+.form-popup {
+    display: block;
+    position: fixed;
+    width: 400px;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+    padding: 0 30px 30px;
+}
+
+.form-container {
+    border: #323131 2px solid;
+    border-radius: 10px;
+    align-items: center;
+    max-width: 300px;
+    padding: 10px;
+    background-color: #f4f7f6;
+}
+
+.add-product-button {
+    padding: 6px 12px;
+    margin-right: 8px;
+    border: none;
+    cursor: pointer;
+    color: #323131;
+    border-radius: 4px;
+    font-size: 14px;
+    text-transform: uppercase;
+    font-weight: bold;
+    background-color: #4caf50;
+}
