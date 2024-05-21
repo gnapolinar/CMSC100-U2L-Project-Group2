@@ -58,6 +58,7 @@ const ProductListing = ({ onAddProduct, onDeleteProduct }) => {
 
   const toggleAddProduct = () => {
     setShowAddProduct((prevState) => !prevState);
+    document.getElementById("productForm").style.display = showAddProduct ? "block" : "none";
   };
 
   const handleAddProduct = async () => {
@@ -154,9 +155,9 @@ const ProductListing = ({ onAddProduct, onDeleteProduct }) => {
 
   return (
     <div>
-      <h2>Product Listing</h2>
+      <h2 className="dashboard-title breadcrumb">Product Listing</h2>
 
-      <div>
+      <div className="breadcrumb">
         <label>Sort by:</label>
         <select value={sortOption} onChange={handleSortOptionChange}>
           <option value="productName">Name</option>
@@ -170,7 +171,7 @@ const ProductListing = ({ onAddProduct, onDeleteProduct }) => {
         </select>
       </div>
 
-      <table>
+      <table className="product-listing">
         <thead>
           <tr>
             <th>Name</th>
@@ -239,11 +240,11 @@ const ProductListing = ({ onAddProduct, onDeleteProduct }) => {
                   product.productQty
                 )}
               </td>
-              <td>
+              <td className="action-buttons">
                 {formData.editIndex === index ? (
-                  <button onClick={() => handleUpdateProduct(index)}>Save</button>
+                  <button className="save-button" onClick={() => handleUpdateProduct(index)}>Save</button>
                 ) : (
-                  <button onClick={() => handleEditProduct(index)}>Edit</button>
+                  <button className="edit-button" onClick={() => handleEditProduct(index)}>Edit</button>
                 )}
                 <button onClick={() => handleDeleteProduct(product._id, index)}>Delete</button>
               </td>
@@ -252,46 +253,48 @@ const ProductListing = ({ onAddProduct, onDeleteProduct }) => {
         </tbody>
       </table>
 
-      <button onClick={toggleAddProduct}>{showAddProduct ? 'Cancel' : 'Add New Product'}</button>
+      <button className="add-button" onClick={toggleAddProduct}>{showAddProduct ? 'Cancel' : 'Add New Product'}</button>
 {showAddProduct && (
-  <div>
-    <h3>Add New Product</h3>
-    <input
-      type="text"
-      name="productName"
-      placeholder="Product Name"
-      value={formData.productName}
-      onChange={(e) => setFormData({ ...formData, productName: e.target.value })}
-    />
-    <input
-      type="text"
-      name="productType"
-      placeholder="Product Type"
-      value={formData.productType}
-      onChange={(e) => setFormData({ ...formData, productType: e.target.value })}
-    />
-    <input
-      type="number"
-      name="productPrice"
-      placeholder="Product Price"
-      value={formData.productPrice}
-      onChange={(e) => setFormData({ ...formData, productPrice: e.target.value })}
-    />
-    <input
-      type="text"
-      name="productDesc"
-      placeholder="Product Description"
-      value={formData.productDesc}
-      onChange={(e) => setFormData({ ...formData, productDesc: e.target.value })}
-    />
-    <input
-      type="number"
-      name="productQty"
-      placeholder="Product Quantity"
-      value={formData.productQty}
-      onChange={(e) => setFormData({ ...formData, productQty: e.target.value })}
-    />
-    <button onClick={handleAddProduct}>Add Product</button>
+  <div className="form-popup">
+    <form className="form-container">
+      <h3>Add New Product</h3>
+      <input
+        type="text"
+        name="productName"
+        placeholder="Product Name"
+        value={formData.productName}
+        onChange={(e) => setFormData({ ...formData, productName: e.target.value })}
+      />
+      <input
+        type="text"
+        name="productType"
+        placeholder="Product Type"
+        value={formData.productType}
+        onChange={(e) => setFormData({ ...formData, productType: e.target.value })}
+      />
+      <input
+        type="number"
+        name="productPrice"
+        placeholder="Product Price"
+        value={formData.productPrice}
+        onChange={(e) => setFormData({ ...formData, productPrice: e.target.value })}
+      />
+      <input
+        type="text"
+        name="productDesc"
+        placeholder="Product Description"
+        value={formData.productDesc}
+        onChange={(e) => setFormData({ ...formData, productDesc: e.target.value })}
+      />
+      <input
+        type="number"
+        name="productQty"
+        placeholder="Product Quantity"
+        value={formData.productQty}
+        onChange={(e) => setFormData({ ...formData, productQty: e.target.value })}
+      />
+      <button className="add-product-button breadcrumb" nClick={handleAddProduct}>Add Product</button>
+    </form>
   </div>
 )}
 
