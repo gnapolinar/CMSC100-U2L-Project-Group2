@@ -98,8 +98,8 @@ export default function Root() {
                                     <>
                                         <li><Link to={`/shop`}>Shop</Link></li>
                                         <li><Link to={`/cart`}>Cart</Link></li>
-                                        <li><Link to={`/account`}>Account</Link></li>
                                         <li><Link to={`/orders`}>Orders</Link></li>
+                                        <li><Link to={`/account`}>Account</Link></li>
                                     </>
                                 )}
                                 {userType === 'merchant' && (
