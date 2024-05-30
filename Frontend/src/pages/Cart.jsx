@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import axios from 'axios';
 import { jwtDecode } from 'jwt-decode';
 import { Cookies } from 'react-cookie';
+import './Cart.css';
 
 const cookies = new Cookies();
 
@@ -67,13 +68,17 @@ const Cart = () => {
             return;
         }
 
+        const updatedCartItems = cartItems.map(item =>
+          item.product._id === productId ? { ...item, quantity: newQuantity } : item
+        );
+        setCartItems(updatedCartItems);
+
         await axios.put(`http://localhost:4000/api/cart/${productId}`, {
             quantity: newQuantity
         }, {
             headers: { Authorization: `Bearer ${token}` }
         });
 
-        fetchCartItems();
     } catch (error) {
         console.error('Error updating item quantity:', error);
         setError('Error updating item quantity. Please try again later.');
@@ -97,9 +102,11 @@ const Cart = () => {
       });
   
       if (response.status === 201) {
+        await subtractProductQuantities(cartItems);
+        await fetchCartItems();
         setCartItems([]);
         setIsConfirmationOpen(false);
-        alert('Order placed successfully!');
+        setError(null);
       } else {
         throw new Error('Failed to place order.');
       }
@@ -109,52 +116,108 @@ const Cart = () => {
     }
   };
 
+  const subtractProductQuantities = async (cartItems) => {
+    try {
+      for (const item of cartItems) {
+        const productId = item.product._id;
+        const newQuantity = item.product.productQty - item.quantity;
+        const updatedQuantity = Math.max(newQuantity, 0);
+
+        await axios.put(`http://localhost:4000/api/products/${productId}`, {
+          quantity: updatedQuantity,
+        });
+      }
+    } catch (error) {
+      console.error('Error subtracting product quantities:', error);
+    }
+  };
+
+  const handleIncreaseQuantity = (productId) => {
+    const updatedCartItems = cartItems.map(item =>
+      item.product._id === productId ? { ...item, quantity: item.quantity + 1 } : item
+    );
+    setCartItems(updatedCartItems);
+    updateQuantity(productId, updatedCartItems.find(item => item.product._id === productId).quantity);
+  };
+
+  const handleDecreaseQuantity = (productId) => {
+    const updatedCartItems = cartItems.map(item =>
+      item.product._id === productId ? { ...item, quantity: Math.max(item.quantity - 1, 0) } : item
+    );
+    setCartItems(updatedCartItems);
+    updateQuantity(productId, updatedCartItems.find(item => item.product._id === productId).quantity);
+  };
+
+  const totalItems = cartItems.reduce((acc, item) => {
+    return acc + (item.quantity || 0);
+  }, 0);
+
   const total = cartItems.reduce((acc, item) => {
     return acc + (item.product ? item.quantity * item.product.productPrice : 0);
   }, 0);
 
   return (
-    <div>
+    <div className="cart-container">
       <h2>Your Cart</h2>
-      {error && <p>{error}</p>}
-        <ul>
-          {cartItems.map((item) => (
-            <li key={item.product?._id}>
-              {item.product ? (
-                <>
-                  {item.product.productName} - {item.quantity} x ${item.product.productPrice}
-                  <button onClick={() => removeFromCart(item.product._id)}>Remove</button>
+      {error && <p className="error">{error}</p>}
+      <div className="cart-item-labels">
+        <span className="label-product">Product</span>
+        <span className="label-quantity">Quantity</span>
+        <span className="label-price">Price</span>
+      </div>
+      <ul className="cart-items">
+        {cartItems.map((item) => (
+          <li key={item.product?._id} className="cart-item">
+            {item.product ? (
+              <>
+                <span className="product-name">{item.product.productName}</span>
+                <span className="product-quantity">
+                  <button onClick={() => handleDecreaseQuantity(item.product._id)}>-</button>
                   <input
                     type="number"
                     value={item.quantity}
                     onChange={(e) => updateQuantity(item.product._id, parseInt(e.target.value))}
-                    style={{ width: '50px' }}
                   />
-                </>
-              ) : (
-                <span>Product information not available</span>
-              )}
-            </li>
-          ))}
-        </ul>
+                  <button onClick={() => handleIncreaseQuantity(item.product._id)}>+</button>
+                </span>
+                <span className="product-price">
+                  ${(item.product.productPrice * item.quantity).toFixed(2)}
+                </span>
+                <button className="remove-btn" onClick={() => removeFromCart(item.product._id)}>Remove</button>
+              </>
+            ) : (
+              <span>Product information not available</span>
+            )}
+          </li>
+        ))}
+      </ul>
 
       {cartItems.length > 0 ? (
-        <>
-          <p>Total Price: ${total.toFixed(2)}</p>
-          <button onClick={handleConfirmOrder}>Confirm Order</button>
-          {isConfirmationOpen && (
-            <div>
-              <p>Are you sure you want to place the order?</p>
-              <button onClick={proceedWithOrder}>Yes</button>
-              <button onClick={() => setIsConfirmationOpen(false)}>No</button>
-            </div>
-          )}
-        </>
+        <div className="cart-summary">
+          <p>Total Items: <span>{totalItems}</span></p>
+          <p>Total Price: <span>${total.toFixed(2)}</span></p>
+          <button className="confirm-btn" onClick={handleConfirmOrder}>Confirm Order</button>
+        </div>
       ) : (
-        <p>The cart is empty. Add now!</p> 
+        <p className="empty-cart">The cart is empty. Add now!</p>
+      )}
+
+      {isConfirmationOpen && (
+        <div className="overlay">
+          <div className="modal">
+            <div className="modal-content">
+              <p>Are you sure you want to place the order?</p>
+              <div className="modal-buttons">
+                <button className="proceed-btn" onClick={proceedWithOrder}>Yes</button>
+                <button className="cancel-btn" onClick={() => setIsConfirmationOpen(false)}>No</button>
+              </div>
+            </div>
+          </div>
+        </div>
       )}
     </div>
   );
 };
+
 
 export default Cart;

@@ -1,0 +1,186 @@
+.shop-container {
+  padding: 80px 20px 20px; /* Added top padding to account for navbar height */
+}
+
+.product-list {
+  display: flex;
+  flex-wrap: wrap;
+  list-style: none;
+  padding: 0;
+}
+
+.product-card {
+  background-color: #f9f9f9;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  margin: 10px;
+  padding: 10px;
+  width: 200px;
+}
+
+.product-info {
+  display: flex;
+  align-items: center;
+}
+
+.product-image-container {
+  width: 100%;
+  height: 200px; /* Set the height to cover the upper part of the card */
+  border-top-left-radius: 5px; /* Add border radius to match the card */
+  border-top-right-radius: 5px;
+  background-color: #069344;
+  background-size: contain;
+  background-position: center;
+  background-repeat: no-repeat;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+}
+
+.product-image {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.product-details {
+  width: 100%;
+  padding-bottom: 5px;
+}
+
+.product-name {
+  font-weight: bold;
+  font-size: larger;
+  margin-bottom: 3px;
+  text-align: center;
+}
+
+.product-desc {
+  margin-bottom: 3px;
+  font-size: 14px;
+  font-style: italic; /* Italicize the product description */
+  color: grey; /* Set color to grey */
+  text-align: center;
+  margin-top: -4px;
+}
+
+.product-price {
+  margin-bottom: -10px;
+}
+
+.product-qty {
+  margin-bottom: 5px;
+}
+.product-controls {
+  display: flex;
+  justify-content: space-between; /* Align items with space between */
+  align-items: center; /* Center align vertically */
+}
+
+.quantity-input {
+  width: 60px; /* Adjusted width for the input field */
+  margin-right: 13vh; /* Added margin for spacing */
+  margin-bottom: 20px;
+}
+
+.quantity-label{
+  margin-bottom: 20px;
+}
+
+.add-to-cart {
+  flex: 1; /* Allow button to expand to fill remaining space */
+  width: 100%; /* Allow button width to adjust based on content */
+  padding: 10px 20px; /* Added padding for better appearance */
+  background-color: #7db03f;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.add-to-cart:hover {
+  background-color: #069344;
+}
+
+/* ADS CONTAINER */
+.ads-container {
+  position: relative;
+  height: calc(100vh - 20vh); /* Full viewport height minus 20vh */
+  width: 100%; /* Full width */
+  overflow: hidden; /* Ensure no overflow */
+  margin-top: 20vh; /* Space below the navbar */
+}
+
+.ad-slider {
+  display: flex;
+  transition: transform 0.5s ease;
+  height: 100%; /* Ensure the slider takes the full height */
+}
+
+.ad {
+  flex: 0 0 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%; /* Ensure each ad takes the full height */
+}
+
+.ad img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain; /* Ensure the image is fully visible */
+}
+
+.ad1 img {
+  object-fit: cover;
+}
+
+.ad2 img {
+  object-fit: contain;
+}
+
+.ad3 img {
+  object-fit: contain;
+}
+
+.left-button,
+.right-button {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 50px;
+  height: 50px;
+  background-color: #fff;
+  color: #007bff;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.left-button {
+  left: 10px;
+}
+
+.right-button {
+  right: 10px;
+}
+
+.left-button:hover,
+.right-button:hover {
+  background-color: #e0e0e0;
+}
+
+.slide1 {
+  transform: translateX(0%);
+}
+
+.slide2 {
+  transform: translateX(-100%);
+}
+
+.slide3 {
+  transform: translateX(-200%);
+}
+
+

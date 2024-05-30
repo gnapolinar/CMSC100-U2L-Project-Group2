@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { Cookies } from 'react-cookie';
 import { jwtDecode } from 'jwt-decode';
 import axios from 'axios';
+import './Account.css';
 
 const cookies = new Cookies();
 
@@ -109,43 +110,53 @@ const UserData = () => {
   }
 
   return (
-    <div>
-      <h1>User Data</h1>
-      {isEditing ? (
-        <>
-          <p>First Name: <input type="text" name="firstName" value={updatedUserData.firstName} onChange={handleChange} /></p>
-          <p>Middle Name: <input type="text" name="middleName" value={updatedUserData.middleName} onChange={handleChange} /></p>
-          <p>Last Name: <input type="text" name="lastName" value={updatedUserData.lastName} onChange={handleChange} /></p>
-        </>
-      ) : (
-        <p>Name: {userData.firstName} {userData.middleName} {userData.lastName}</p>
-      )}
-      <p>Email: {isEditing ? <input type="text" name="email" value={updatedUserData.email} onChange={handleChange} /> : userData.email}</p>
-      <p>Account Type: {userData.userType.charAt(0).toUpperCase() + userData.userType.slice(1)}</p>
-
-      <div>
+    <div className="account-container">
+      <h1 className="account-header">My Profile</h1>
+      <div className="field-box full-name-box">
+        <p className="field-label">Full Name:</p>
+        <div className="field-value">
+          {isEditing ? (
+            <input type="text" name="fullName" value={updatedUserData.fullName} onChange={handleChange} />
+          ) : (
+            <p>{`${userData.firstName} ${userData.lastName}`}</p>
+          )}
+        </div>
+      </div>
+      <div className="field-box email-box">
+        <p className="field-label">Email:</p>
+        <div className="field-value">
+          {isEditing ? <input type="text" name="email" value={updatedUserData.email} onChange={handleChange} /> : <p>{userData.email}</p>}
+        </div>
+      </div>
+      <div className="field-box account-type-box">
+        <p className="field-label">Account Type:</p>
+        <div className="field-value">
+          <p>{userData.userType.charAt(0).toUpperCase() + userData.userType.slice(1)}</p>
+        </div>
+      </div>
+      <div className="account-actions">
         {isEditing ? (
-          <div>
-            <button onClick={handleUpdateUserData}>Save Changes</button>
-            <button onClick={() => setIsEditing(false)}>Cancel</button>
+          <div className="edit-buttons">
+            <button className="save-button" onClick={handleUpdateUserData}>Save Changes</button>
+            <button className="cancel-button" onClick={() => setIsEditing(false)}>Cancel</button>
           </div>
         ) : (
-          <button onClick={handleEdit}>Edit</button>
+          <button className="edit-button" onClick={handleEdit}>Edit</button>
         )}
 
         {!isEditing && (
-          <button onClick={handleChangePassword}>Change Password</button>
+          <button className="change-password-button" onClick={handleChangePassword}>Change Password</button>
         )}
 
         {isChangingPassword && (
-          <div>
-            <input type="password" placeholder="Current Password" value={currentPassword} onChange={(e) => setCurrentPassword(e.target.value)} />
-            <input type="password" placeholder="New Password" value={newPassword} onChange={(e) => setNewPassword(e.target.value)} />
-            <button onClick={handlePasswordChange}>Change Password</button>
-            <button onClick={() => setIsChangingPassword(false)}>Cancel</button>
+          <div className="password-change-container">
+            <input type="password" className="password-input" placeholder="Current Password" value={currentPassword} onChange={(e) => setCurrentPassword(e.target.value)} />
+            <input type="password" className="password-input" placeholder="New Password" value={newPassword} onChange={(e) => setNewPassword(e.target.value)} />
+            <button className="password-change-button" onClick={handlePasswordChange}>Save</button>
+            <button className="cancel-button" onClick={() => setIsChangingPassword(false)}>Cancel</button>
           </div>
         )}
-        {confirmationMessage && <p>{confirmationMessage}</p>}
+        {confirmationMessage && <p className="confirmation-message">{confirmationMessage}</p>}
       </div>
     </div>
   );

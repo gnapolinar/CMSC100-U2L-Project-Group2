@@ -3,6 +3,7 @@ import { useState, useEffect } from 'react';
 import { Cookies } from 'react-cookie';
 import { jwtDecode } from 'jwt-decode';
 import axios from 'axios';
+import './Order.css'
 
 const cookies = new Cookies();
 
@@ -90,28 +91,31 @@ const Orders = () => {
       }
 
       return (
-        <details key={datetime}>
-          <summary>{datetime} - Total Quantity: {getTotalQuantity(filteredOrders)}, Total Price: {getTotalPrice(filteredOrders)}</summary>
-          <ul>
-            {filteredOrders.map(order => {
-              return (
-                <li key={order.transactionID}>
-                  Product: {order.productName || 'Unknown'}, Quantity: {order.orderQty}, Price: {order.orderPrice}
-                </li>
-              );
-            })}
-          </ul>
-        </details>
-      );
-    });
-  };
+        <details key={datetime} className="order-details">
+        <summary className="order-summary">{datetime} - Total Quantity: {getTotalQuantity(filteredOrders)}, Total Price: ${getTotalPrice(filteredOrders).toFixed(2)}</summary>
+        <ul className="order-list">
+          {filteredOrders.map(order => {
+            return (
+              <li key={order.transactionID} className="order-item">
+                <span className="order-product">Product: {order.productName || 'Unknown'}</span>
+                <span className="order-quantity">Quantity: {order.orderQty}</span>
+                <span className="order-price">Price: ${order.orderPrice.toFixed(2)}</span>
+              </li>
+            );
+          })}
+        </ul>
+      </details>
+    );
+  });
+};
+
 
   return (
-    <div>
-      <h1>Orders</h1>
-      {renderOrders()}
-    </div>
-  );
+    <div className="orders-container">
+    <h1 className="orders-title">Orders</h1>
+    {renderOrders()}
+  </div>
+);
 };
 
 export default Orders;
