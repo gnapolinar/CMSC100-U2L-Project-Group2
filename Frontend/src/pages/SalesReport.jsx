@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import './SalesReport.css';
 
 export default function SalesReports() {
@@ -27,7 +27,6 @@ export default function SalesReports() {
           annualReport: data.annualReport
         });
 
-        // Determine the range of years from the data
         const allYears = new Set();
         Object.keys(data.weeklyReport).forEach((date) => {
           const year = new Date(date).getFullYear();
@@ -137,14 +136,12 @@ export default function SalesReports() {
   const filterOrdersByPeriod = (orders, period, selectedWeek, selectedMonth, selectedYear) => {
     if (!selectedYear || !selectedWeek) return [];
   
-    // Find the start and end dates of the selected week
     const selectedWeekObj = getWeeksInMonth(selectedYear, selectedMonth).find(week => week.value === selectedWeek);
     if (!selectedWeekObj) return [];
   
     const startDate = new Date(selectedWeekObj.start.getTime());
     const endDate = new Date(selectedWeekObj.end.getTime());
-  
-    // Filter orders based on the selected week
+
     return orders.filter(order => {
       const orderDate = new Date(order.dateOrdered);
       return orderDate >= startDate && orderDate <= endDate;
@@ -182,11 +179,11 @@ export default function SalesReports() {
     const summary = reportData[selectedPeriod];
   
     if (!selectedPeriod || !summary) {
-      return <p>No sales report available.</p>;
+      return <p style={{ textAlign: 'center' }}>No sales report available</p>;
     }
   
     const filteredOrders = filterOrdersByPeriod(orders, period, selectedWeek, selectedMonth, selectedYear);
-    console.log("FilteredOrders:", filteredOrders);
+    console.log("FilteredOrders:", filteredOrders); 
   
     return (
       <div>
