@@ -9,6 +9,11 @@ const cookies = new Cookies();
 const Shop = () => {
   const [products, setProducts] = useState([]);
   const [quantity, setQuantity] = useState({});
+  const [isActive, setIsActive] = useState(false);
+
+  useEffect(() => {
+    setIsActive(true);
+  }, []);
 
   useEffect(() => {
     fetchProducts();
@@ -17,11 +22,14 @@ const Shop = () => {
   const fetchProducts = async () => {
     try {
       const response = await axios.get('http://localhost:4000/api/products');
-      setProducts(response.data);
+      const productsData = response.data;
+  
       const initialQuantity = {};
-      response.data.forEach(product => {
-        initialQuantity[product.productID] = 1;
+      productsData.forEach(product => {
+        initialQuantity[product._id] = 1;
       });
+  
+      setProducts(productsData);
       setQuantity(initialQuantity);
     } catch (error) {
       console.error('Error fetching products:', error);
@@ -67,8 +75,9 @@ const Shop = () => {
   };
 
   return (
+    <div className={`fade-in-out ${isActive ? "active" : ""}`}>
     <div className="shop-container">
-    <h1>Shop</h1>
+    <h1 className="shop-title">SHOP</h1>
     {products.length > 0 ? (
       <ul className="product-list">
         {products.map((product) => (
@@ -107,6 +116,7 @@ const Shop = () => {
     ) : (
       <p>Loading...</p>
     )}
+  </div>
   </div>
 );
 };
