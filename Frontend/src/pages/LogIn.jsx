@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import axios from 'axios';
 import { Cookies } from 'react-cookie';
 import { useNavigate } from 'react-router-dom';
@@ -13,6 +13,11 @@ const LogIn = () => {
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const navigate = useNavigate();
+  const [isActive, setIsActive] = useState(false);
+
+  useEffect(() => {
+    setIsActive(true);
+  }, []);
 
   const handleLogin = async (event) => {
     event.preventDefault();
@@ -33,14 +38,23 @@ const LogIn = () => {
       } else {
         console.log('Login failed:', response.data.error);
         setError('Invalid email or password');
+
+    setTimeout(() => {
+      setError('');
+    }, 3000);
       }
     } catch (error) {
       console.error('Error logging in:', error);
       setError('Invalid email or password');
+
+      setTimeout(() => {
+        setError('');
+      }, 3000);
     }
   };
 
   return (
+    <div className={`fade-in-out ${isActive ? "active" : ""}`}>
     <div className="login-container">
       <div className="background-image"></div>
       <div className="login-form">
@@ -70,6 +84,7 @@ const LogIn = () => {
         </form>
         {error && <p className="error-message">{error}</p>}
       </div>
+    </div>
     </div>
   );
 };
