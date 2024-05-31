@@ -20,7 +20,8 @@ export const addProduct = async (req, res) => {
             productDesc: req.body.productDesc,
             productType: req.body.productType,
             productQty: req.body.productQty,
-            productPrice: req.body.productPrice
+            productPrice: req.body.productPrice,
+            imageUrl: req.body.imageUrl
         });
         await newProduct.save();
         console.log('Product added successfully:', newProduct);
@@ -45,6 +46,7 @@ export const updateProduct = async (req, res) => {
                 productType: req.body.productType,
                 productQty: req.body.productQty,
                 productPrice: req.body.productPrice,
+                imageUrl: req.body.imageUrl
             },
             { new: true }
         );
@@ -76,24 +78,20 @@ export const removeProduct = async (req, res) => {
     }
 };
 
-export const updateProductQuantity = async (req, res) => {
+export const updateProductQuantity = async (productId, newQuantity) => {
     try {
-        console.log('Request Body:', req.body);
-
-        const productId = req.params.id;
-        const updatedProduct = await Product.findOneAndUpdate(
-            { productID: productId },
-            { $inc: { productQty: -req.body.quantity } },
-            { new: true }
-        );
-        if (!updatedProduct) {
-            console.log('Product not found.');
-            return res.status(404).json({ message: 'Product not found.' });
-        }
-        console.log('Product quantity updated successfully:', updatedProduct);
-        res.status(200).json({ message: 'Product quantity updated successfully.' });
-    } catch (err) {
-        console.error('Error updating product quantity:', err);
-        res.status(500).json({ message: 'Server Error' });
+      const product = await Product.findById(productId);
+      if (!product) {
+        console.error('Product not found');
+        return false;
+      }
+  
+      product.productQty = newQuantity;
+      await product.save();
+      
+      return true;
+    } catch (error) {
+      console.error('Error updating product quantity:', error);
+      return false;
     }
 };
