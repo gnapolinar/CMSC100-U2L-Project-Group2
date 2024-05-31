@@ -1,5 +1,5 @@
 .shop-container {
-  padding: 80px 20px 20px; /* Added top padding to account for navbar height */
+  padding: 80px 20px 20px;
 }
 
 .product-list {
@@ -25,8 +25,8 @@
 
 .product-image-container {
   width: 100%;
-  height: 200px; /* Set the height to cover the upper part of the card */
-  border-top-left-radius: 5px; /* Add border radius to match the card */
+  height: 200px;
+  border-top-left-radius: 5px;
   border-top-right-radius: 5px;
   background-color: #069344;
   background-size: contain;
@@ -59,8 +59,8 @@
 .product-desc {
   margin-bottom: 3px;
   font-size: 14px;
-  font-style: italic; /* Italicize the product description */
-  color: grey; /* Set color to grey */
+  font-style: italic; 
+  color: grey;
   text-align: center;
   margin-top: -4px;
 }
@@ -74,13 +74,12 @@
 }
 .product-controls {
   display: flex;
-  justify-content: space-between; /* Align items with space between */
-  align-items: center; /* Center align vertically */
-}
+  justify-content: space-between;
+  align-items: center;
 
 .quantity-input {
-  width: 60px; /* Adjusted width for the input field */
-  margin-right: 13vh; /* Added margin for spacing */
+  width: 60px; 
+  margin-right: 13vh;
   margin-bottom: 20px;
 }
 
@@ -89,9 +88,9 @@
 }
 
 .add-to-cart {
-  flex: 1; /* Allow button to expand to fill remaining space */
-  width: 100%; /* Allow button width to adjust based on content */
-  padding: 10px 20px; /* Added padding for better appearance */
+  flex: 1;
+  width: 100%;
+  padding: 10px 20px;
   background-color: #7db03f;
   color: #fff;
   border: none;
@@ -106,16 +105,16 @@
 /* ADS CONTAINER */
 .ads-container {
   position: relative;
-  height: calc(100vh - 20vh); /* Full viewport height minus 20vh */
-  width: 100%; /* Full width */
-  overflow: hidden; /* Ensure no overflow */
-  margin-top: 20vh; /* Space below the navbar */
+  height: calc(100vh - 20vh);
+  width: 100%; 
+  overflow: hidden;
+  margin-top: 20vh;
 }
 
 .ad-slider {
   display: flex;
   transition: transform 0.5s ease;
-  height: 100%; /* Ensure the slider takes the full height */
+  height: 100%;
 }
 
 .ad {
@@ -123,13 +122,13 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 100%; /* Ensure each ad takes the full height */
+  height: 100%;
 }
 
 .ad img {
   width: 100%;
   height: 100%;
-  object-fit: contain; /* Ensure the image is fully visible */
+  object-fit: contain;
 }
 
 .ad1 img {
