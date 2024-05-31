@@ -10,6 +10,7 @@ import Orders from './pages/Orders';
 import Account from './pages/Account';
 import Cart from './pages/Cart';
 import Dashboard from './pages/Dashboard';
+import UserManagement from './pages/UserManagement';
 import MerchantOrders from './pages/Orders_MerchantView';
 import SalesReports from './pages/SalesReport';
 import Error from './pages/Error';
@@ -59,7 +60,8 @@ const App = () => {
         { path: 'orders', element: isUserSignedIn && userType === 'customer' ? <Orders /> : <Error /> },
         { path: 'shop', element: isUserSignedIn && userType === 'customer' ? <Shop /> : <Error /> },
         { path: 'merchantorders', element: isUserSignedIn && userType === 'merchant' ? <MerchantOrders /> : <Error /> },
-        { path: 'salesreports', element: isUserSignedIn && userType === 'merchant' ? <SalesReports /> : <Error /> }
+        { path: 'salesreports', element: isUserSignedIn && userType === 'merchant' ? <SalesReports /> : <Error /> },
+        { path: 'manageusers', element: isUserSignedIn && userType === 'merchant' ? <UserManagement /> : <Error /> }
       ]
     }
   ]);

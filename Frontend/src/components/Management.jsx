@@ -30,9 +30,9 @@ const Management = () => {
   }
 
   return (
-    <div>
-      <h2>User Management</h2>
-      <table>
+    <div className='main'>
+      <h1>User Management</h1>
+      <table className="product-listing">
         <thead>
           <tr>
             <th>Name</th>
@@ -49,7 +49,7 @@ const Management = () => {
             </tr>
           ))}
         </tbody>
-        <p>Total Users: {users.length}</p>
+        <h3><b>Total Users: {users.length}</b></h3>
       </table>
     </div>
   );

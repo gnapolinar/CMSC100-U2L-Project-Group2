@@ -156,6 +156,7 @@ const generateSalesReport = (orders, period) => {
 const getWeekOfMonth = (date) => {
     const startOfMonth = new Date(date.getFullYear(), date.getMonth(), 1);
     const dayOfMonth = date.getDate();
-    const dayOfWeek = startOfMonth.getDay();
-    return Math.ceil((dayOfMonth + dayOfWeek) / 7);
+    const dayOfWeek = startOfMonth.getDay(); // 0 for Sunday, 1 for Monday, etc.
+    const adjustedDate = dayOfMonth + (dayOfWeek === 0 ? 0 : (7 - dayOfWeek)); // Adjusted to the nearest Sunday
+    return Math.ceil(adjustedDate / 7);
 };
