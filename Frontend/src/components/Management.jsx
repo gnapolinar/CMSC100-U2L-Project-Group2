@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import axios from 'axios';
-import './Management.css'; // Import the CSS file for user management styles
+import './Management.css';
 
 const Management = () => {
   const [users, setUsers] = useState([]);
@@ -23,17 +23,17 @@ const Management = () => {
   }, []);
 
   if (loading) {
-    return <div className="loading">Loading...</div>; {/* Added className */}
+    return <div className="loading">Loading...</div>;
   }
 
   if (error) {
-    return <div className="error">{error}</div>; {/* Added className */}
+    return <div className="error">{error}</div>;
   }
 
   return (
     <div className='mainm'>
-      <h1 className='management-title'>User Management</h1> {/* Added className */}
-      <table className='user-table'> {/* Added className */}
+      <h1 className='management-title'>User Management</h1>
+      <table className='user-table'>
         <thead>
           <tr>
             <th>Name</th>
