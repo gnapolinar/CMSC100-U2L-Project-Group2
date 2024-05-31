@@ -1,0 +1,86 @@
+/* styles.css */
+
+.sales-report-container {
+  max-width: 600px; /* Decreasing the width to match the account container */
+  margin: 0 auto;
+  margin-top: 25vh;
+  margin-bottom: 20vh;
+  padding: 20px;
+  background-color: #f0fff0; /* Using the background color from Account.css */
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.sales-report-title {
+  text-align: center;
+  margin-bottom: 20px;
+  font-size: 2em;
+  color: #2e8b57; /* Changing title color to match the header color in Account.css */
+}
+
+.filters-container {
+  margin-bottom: 20px;
+}
+
+.filter-label {
+  font-size: 16px;
+  color: #2e8b57; /* Changing filter label color to match the header color in Account.css */
+  margin-right: 5px;
+}
+
+.filter-label::after {
+  content: ":"; /* Keeping the filter label style */
+}
+
+.select-period {
+  padding: 6px 12px;
+  margin-right: 8px;
+  border: none;
+  cursor: pointer;
+  color: white; /* Changing select button text color to white */
+  border-radius: 4px;
+  font-size: 14px;
+  text-transform: uppercase;
+  font-weight: bold;
+  background-color: #7db03f; /* Changing select button background color to match Account.css */
+}
+
+.option {
+  /* Applying the same styles as select-period */
+  padding: 6px 12px;
+  margin-right: 8px;
+  border: none;
+  cursor: pointer;
+  color: white;
+  border-radius: 4px;
+  font-size: 14px;
+  text-transform: uppercase;
+  font-weight: bold;
+  background-color: #7db03f;
+}
+
+.product-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+}
+
+.product-table th,
+.product-table td {
+  border: 1px solid #ddd;
+  padding: 8px;
+  text-align: left;
+}
+
+.product-table th {
+  background-color: #f2f2f2;
+  font-weight: bold;
+}
+
+.product-table tbody tr:nth-child(even) {
+  background-color: #f9f9f9;
+}
+
+.product-table tbody tr:hover {
+  background-color: #f2f2f2;
+}
