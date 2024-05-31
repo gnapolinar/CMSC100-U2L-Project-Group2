@@ -1,272 +1,258 @@
 body {
-    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
-    margin: 0; 
-    background-color: #f4f7f6;
-    display: flex;
-    flex-direction: column;
-    min-height: 100vh;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+  margin: 0; 
+  background-color: #f4f7f6;
 }
 
 .app-container {
-    display: flex;
-    flex-direction: column;
-    min-height: 100vh;
-    flex: 1;
-    padding-bottom: 80px; 
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
 }
 
 /* HEADER COMPONENTS */
 .navigation-bar {
-    position: fixed;
-    top: 0;
-    width: 100%;
-    height: 10vh;
-    display: flex;
-    justify-content: space-between; 
-    align-items: center;
-    padding: 5px;
-    background-color: #333;
-    transition: background-color 0.3s ease;
-    z-index: 2;
-}
-
-.main{
-    flex: 1;
-    padding-top: 10vh;
+  position: fixed;
+  top: 0;
+  width: 100%;
+  height: 10vh;
+  display: flex;
+  justify-content: space-between; 
+  align-items: center;
+  padding: 5px;
+  background-color: transparent;
+  transition: background-color 0.3s ease;
+  z-index: 2;
 }
 
 .navigation-bar ul {
-    list-style-type: none; 
-    display: flex;
-    flex-direction: row;
-    align-items: center;
+  list-style-type: none; 
+  display: flex;
+  flex-direction: row;
+  align-items: center;
 }
 
 .navigation-bar .ul-1 {
-    margin-left: -20px;
+  margin-left: -20px;
 }
 
 .navigation-bar .ul-2 {
-    margin-right: auto;
-    margin-left: -15vh;
+  margin-right: auto;
+  margin-left: -15vh;
 }
 
 .navigation-bar .ul-3 {
-    margin-right: 20px;
+  margin-right: 20px;
 }
 
 .navigation-bar ul li {
-    margin-right: 20px; 
+  margin-right: 20px; 
 }
 
 .navigation-bar ul li a {
-    text-decoration: none; 
-    color: #eaeaea; 
+  text-decoration: none; 
+  color: #eaeaea; 
 }
 
 .navigation-bar .ul-2 li a:hover {
-    text-decoration: none; 
-    color: grey; 
+  text-decoration: none; 
+  color: grey; 
 }
 
 .navigation-bar .website-name {
-    font-size: 25px;
-    font-weight: bold;
-    color: #eaeaea;
-    text-decoration: none; 
-    cursor: default; 
+  font-size: 25px;
+  font-weight: bold;
+  color: #eaeaea;
+  text-decoration: none; 
+  cursor: default; 
 }
 
 .navigation-bar .website-name:hover {
-    color: #eaeaea; 
+  color: #eaeaea; 
 }
 
 .website-name  {
-    list-style-type: none;
-    font-size: 25px;
-    font-weight: bold;
-    color: #eaeaea; 
+  list-style-type: none;
+  font-size: 25px;
+  font-weight: bold;
+  color: #eaeaea; 
 }
 
 .logo {
-    width: 50px; 
-    height: auto; 
+  width: 50px; 
+  height: auto; 
 }
 
 .navigation-bar .logo-container {
-    display: flex;
-    align-items: center;
-    margin-left: 20px;
+  display: flex;
+  align-items: center;
+  margin-left: 20px;
 }
 
 .navigation-bar .logo {
-    width: 50px;
-    height: auto;
-    margin-right: 2px;
+  width: 50px;
+  height: auto;
+  margin-right: 2px;
 }
 
 .navigation-bar .website-name {
-    font-size: 25px;
-    font-weight: bold;
-    color: #eaeaea;
+  font-size: 25px;
+  font-weight: bold;
+  color: #eaeaea;
 }
 
 .navigation-bar .login-button {
-    background-color: #7db03f;
-    color: white;
-    padding: 8px 15px;
-    border-radius: 10px;
-    margin-right: 10px; 
+  background-color: #069344;
+  color: white;
+  padding: 8px 15px;
+  border-radius: 10px;
+  margin-right: 10px; 
 }
 
 .navigation-bar .signup-link {
-    margin-left: 20px;
+  margin-left: 20px;
 }
 
 .navigation-bar .logout-button button {
-    background-color: #7db03f; 
-    border: none;
-    color: white;
-    padding: 8px 15px;
-    border-radius: 10px;
+  background-color: #7db03f; 
+  border: none;
+  color: white;
+  padding: 8px 15px;
+  border-radius: 10px;
 }
 
 .navigation-bar .logout-button button:hover {
-    background-color: #6a9534; 
+  background-color: #7db03f;
 }
 
 /* FOOTER COMPONENTS */
 .footer {
-    margin-top: auto;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    padding: 15px;
-    background-color: #323131;
-    width: 100%;
-    bottom: 0;
-    height: 15px; /* Adjust according to footer height */
-    z-index: 2;
+  margin-top: auto;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 15px;
+  background-color: #323131;
 }
 
 .footer p {
-    margin: 0; 
-    color: #eaeaea;
+  margin: 0; 
+  color: #eaeaea;
 }
 
 .footer-content1 {
-    margin-bottom: 5px; 
+  margin-bottom: 5px; 
 }
 
 .footer-content2 {
-    margin-top: 5px;
+  margin-top: 5px;
 }
 
 /* ADMIN DASHBOARD COMPONENTS */
 .dashboard-title {
-    font-size: 30px;
-    font-weight: bold;
-    margin: 20px 0;
-    color: #323131;
+  font-size: 30px;
+  font-weight: bold;
+  margin: 20px 0;
+  color: #323131;
 }
 
 /* Breadcrumb styling */
 .breadcrumb {
-    margin: 20px;
-    padding-left: 20px;
+  margin: 20px;
+  padding-left: 20px;
 }
-  
+
 /* Table styles */
 .product-listing {
-    width: 90%;
-    margin: 20px auto;
-    border-collapse: collapse;
+  width: 90%;
+  margin: 20px auto;
+  border-collapse: collapse;
 }
 
 .product-listing th,
 .product-listing td {
-    text-align: left;
-    padding: 12px;
-    border-bottom: 1px solid #ddd;
+  text-align: left;
+  padding: 12px;
+  border-bottom: 1px solid #ddd;
 }
 
 .product-listing th {
-    background-color: #f5f5f5;
+  background-color: #f5f5f5;
 }
 
 .product-listing tr:hover {
-    background-color: #f5f5f5;
+  background-color: #f5f5f5;
 }
 
 /* Action buttons styling */
 .action-buttons {
-    display: flex;
-    justify-content: flex-start;
+  display: flex;
+  justify-content: flex-start;
 }
 
 .action-buttons button {
-    padding: 6px 12px;
-    margin-right: 8px;
-    border: none;
-    cursor: pointer;
-    color: #323131;
-    border-radius: 4px;
-    font-size: 14px;
-    text-transform: uppercase;
-    font-weight: bold;
+  padding: 6px 12px;
+  margin-right: 8px;
+  border: none;
+  cursor: pointer;
+  color: #323131;
+  border-radius: 4px;
+  font-size: 14px;
+  text-transform: uppercase;
+  font-weight: bold;
 }
 
 .action-buttons .edit-button {
-    background-color: #4caf50;
+  background-color: #4caf50;
 }
 
 .action-buttons .save-button {
-    background-color: #4caf50;
+  background-color: #4caf50;
 }
 
 .add-button {
-    padding: 6px 12px;
-    margin-right: 8px;
-    border: none;
-    cursor: pointer;
-    color: #323131;
-    border-radius: 4px;
-    font-size: 14px;
-    text-transform: uppercase;
-    font-weight: bold;
-    background-color: #4caf50;
+  padding: 6px 12px;
+  margin-right: 8px;
+  border: none;
+  cursor: pointer;
+  color: #323131;
+  border-radius: 4px;
+  font-size: 14px;
+  text-transform: uppercase;
+  font-weight: bold;
+  background-color: #4caf50;
 }
 
 .form-popup {
-    display: block;
-    position: fixed;
-    width: 400px;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    text-align: center;
-    padding: 0 30px 30px;
+  display: block;
+  position: fixed;
+  width: 400px;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+  padding: 0 30px 30px;
 }
 
 .form-container {
-    border: #323131 2px solid;
-    border-radius: 10px;
-    align-items: center;
-    max-width: 300px;
-    padding: 10px;
-    background-color: #f4f7f6;
+  border: #323131 2px solid;
+  border-radius: 10px;
+  align-items: center;
+  max-width: 300px;
+  padding: 10px;
+  background-color: #f4f7f6;
 }
 
 .add-product-button {
-    padding: 6px 12px;
-    margin-right: 8px;
-    border: none;
-    cursor: pointer;
-    color: #323131;
-    border-radius: 4px;
-    font-size: 14px;
-    text-transform: uppercase;
-    font-weight: bold;
-    background-color: #4caf50;
+  padding: 6px 12px;
+  margin-right: 8px;
+  border: none;
+  cursor: pointer;
+  color: #323131;
+  border-radius: 4px;
+  font-size: 14px;
+  text-transform: uppercase;
+  font-weight: bold;
+  background-color: #4caf50;
 }
