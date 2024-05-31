@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import './Order.css'; // Import the CSS file for customer view styles
+import './OrderM.css'; // Import the CSS file for customer view styles
 
 export default function MerchantOrders() {
   const [orders, setOrders] = useState([]);

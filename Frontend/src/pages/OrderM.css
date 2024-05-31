@@ -1,0 +1,65 @@
+/* Order.css */
+
+.orders-container {
+    max-width: 600px;
+    margin: 0 auto;
+    margin-top: 25vh;
+    margin-bottom: 20vh;
+    padding: 20px;
+    background-color: #f0fff0;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Adding shadow effect */
+}
+
+.orders-title {
+    text-align: center;
+    margin-bottom: 20px;
+    font-size: 2em;
+    color: #2e8b57; /* Using color from account CSS */
+}
+
+.order-summary {
+    font-weight: bold;
+    font-size: 1.1em;
+    cursor: pointer;
+    color: #2e8b57; /* Using color from account CSS */
+}
+
+.order-group {
+    margin-top: 10px;
+}
+
+.order-item {
+    margin-top: 10px;
+}
+
+.order-actions {
+    display: flex;
+    justify-content: center;
+    margin-top: 10px;
+}
+
+.order-actions button {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+.order-actions button:first-child {
+    background-color: #7db03f;
+    margin-right: 10px;
+    color: white;
+}
+
+.order-actions button:last-child {
+    background-color: #f44336;
+    color: white;
+}
+
+ul {
+    list-style-type: none;
+  }
+
+  

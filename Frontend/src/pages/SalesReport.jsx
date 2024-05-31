@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import './SalesReport.css';
 
 export default function SalesReports() {
   const [report, setReport] = useState({
@@ -101,6 +102,31 @@ export default function SalesReports() {
     return weeks;
   };
 
+  const renderProductTable = (products) => {
+    return (
+      <table className="product-table">
+        <thead>
+          <tr>
+            <th>Product ID</th>
+            <th>Product Name</th>
+            <th>Total Quantity Sold</th>
+            <th>Total Revenue</th>
+          </tr>
+        </thead>
+        <tbody>
+          {Object.entries(products).map(([productId, product]) => (
+            <tr key={productId}>
+              <td>{productId}</td>
+              <td>{product.productName}</td>
+              <td>{product.totalQtySold}</td>
+              <td>{product.totalRevenue}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    );
+  };
+
   const formatDateRange = (start, end) => {
     const options = { month: 'long', day: 'numeric', year: 'numeric' };
     const startFormatted = start.toLocaleDateString(undefined, options);
@@ -125,8 +151,6 @@ export default function SalesReports() {
     });
   };
   
-  
-
   const renderReport = (report, period, selectedWeek, selectedMonth, selectedYear) => {
     let selectedPeriod = '';
     let title = '';
@@ -167,29 +191,19 @@ export default function SalesReports() {
     return (
       <div>
         <h3>{title}</h3>
-        <p>Total Sales: {summary.totalSales}</p>
-        <p>Total Orders: {summary.totalOrders}</p>
+        <h4>Total Sales: $ {summary.totalSales}</h4>
         <h4>Products Sold:</h4>
-        <ul>
-          {Object.entries(summary.products).map(([productId, product]) => (
-            <li key={productId}>
-              <p>Product ID: {productId}</p>
-              <p>Product Name: {product.productName}</p>
-              <p>Total Quantity Sold: {product.totalQtySold}</p>
-              <p>Total Revenue: {product.totalRevenue}</p>
-            </li>
-          ))}
-        </ul>
+        {renderProductTable(summary.products)}
       </div>
     );
   };
 
   return (
-    <div className='main'>
-      <h1>Sales Report</h1>
-      <div>
-        <label htmlFor="period">Select Period: </label>
-        <select id="period" value={period} onChange={handlePeriodChange}>
+    <div className='sales-report-container'>
+      <h1 className="sales-report-title">Sales Report</h1>
+      <div className="filters-container">
+        <label htmlFor="period">Select Period </label>
+        <select id="period" value={period} onChange={handlePeriodChange} className="select-period">
           <option value="weekly">Weekly</option>
           <option value="monthly">Monthly</option>
           <option value="annual">Annual</option>
@@ -198,7 +212,7 @@ export default function SalesReports() {
       {period === 'weekly' && (
         <div>
           <label htmlFor="month">Select Month: </label>
-          <select id="month" value={selectedMonth} onChange={handleDateChange}>
+          <select id="month" value={selectedMonth} onChange={handleDateChange} className="select-period">
             <option value="">--Select Month--</option>
             {[...Array(12)].map((_, i) => (
               <option key={i + 1} value={String(i + 1).padStart(2, '0')}>
@@ -207,7 +221,7 @@ export default function SalesReports() {
             ))}
           </select>
           <label htmlFor="year">Select Year: </label>
-          <select id="year" value={selectedYear} onChange={handleDateChange}>
+          <select id="year" value={selectedYear} onChange={handleDateChange} className="select-period">
             <option value="">--Select Year--</option>
             {years.map((year) => (
               <option key={year} value={String(year)}>{String(year)}</option>
@@ -216,7 +230,7 @@ export default function SalesReports() {
           {selectedMonth && selectedYear && (
             <div>
               <label htmlFor="week">Select Week: </label>
-              <select id="week" value={selectedWeek} onChange={handleDateChange}>
+              <select id="week" value={selectedWeek} onChange={handleDateChange} className="select-period">
                 <option value="">--Select Week--</option>
                 {getWeeksInMonth(selectedYear, selectedMonth).map((week) => (
                   <option key={week.value} value={week.value}>{week.label}</option>
@@ -229,7 +243,7 @@ export default function SalesReports() {
       {period === 'monthly' && (
         <div>
           <label htmlFor="month">Select Month: </label>
-          <select id="month" value={selectedMonth} onChange={handleDateChange}>
+          <select id="month" value={selectedMonth} onChange={handleDateChange} className="select-period">
             <option value="">--Select Month--</option>
             {[...Array(12)].map((_, i) => (
               <option key={i + 1} value={String(i + 1).padStart(2, '0')}>
@@ -238,7 +252,7 @@ export default function SalesReports() {
             ))}
           </select>
           <label htmlFor="year">Select Year: </label>
-          <select id="year" value={selectedYear} onChange={handleDateChange}>
+          <select id="year" value={selectedYear} onChange={handleDateChange} className="select-period">
             <option value="">--Select Year--</option>
             {years.map((year) => (
               <option key={year} value={String(year)}>{String(year)}</option>
@@ -249,7 +263,7 @@ export default function SalesReports() {
       {period === 'annual' && (
         <div>
           <label htmlFor="year">Select Year: </label>
-          <select id="year" value={selectedYear} onChange={handleDateChange}>
+          <select id="year" value={selectedYear} onChange={handleDateChange} className="select-period">
             <option value="">--Select Year--</option>
             {years.map((year) => (
               <option key={year} value={String(year)}>{String(year)}</option>
