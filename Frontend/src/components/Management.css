@@ -9,14 +9,17 @@
     border: 1px solid #ddd;
     border-radius: 10px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    background-color: #f0fff0; /* Changed background color */
   }
   
   .management-title {
     text-align: center;
+    margin-top: 10px;
     margin-bottom: 20px;
-    font-size: 2em;
-    color: #2e8b57; /* Changed title color */
+    font-size: 28px;
+    font-weight: bold;
+    color: #333;
+    text-transform: uppercase;
+    letter-spacing: 1px;
   }
   
   .user-table {
@@ -27,13 +30,13 @@
   
   .user-table th,
   .user-table td {
-    border: 1px solid #ddd;
     padding: 8px;
     text-align: left;
+    border: none; /* Remove borders from table cells */
   }
   
   .user-table th {
-    background-color: #e0e0e0; /* Changed header background color */
+    background-color: #e0e0e0;
     font-weight: bold;
   }
   
@@ -47,15 +50,13 @@
   
   .total-users {
     font-weight: bold;
-    font-size: x-large;
+    font-size: 20px;
     float: right;
     text-align: right;
-    color: #2e8b57; /* Changed total users text color */
   }
-
+  
   .user-table tfoot td {
     border-bottom: none;
     border-left: none;
     border-right: none;
   }
-  
