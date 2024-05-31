@@ -64,10 +64,28 @@ export const placeOrder = async (req, res) => {
 export const removeOrder = async (req, res) => {
     try {
         const transactionID = req.params.transactionID;
+        const order = await Order.findOne({ transactionID });
+
+        if (!order) {
+            return res.status(404).json({ error: 'Order not found' });
+        }
+
+        const quantity = order.orderQty;
+
+        const product = await Product.findById(order.productID);
+
+        if (!product) {
+            return res.status(404).json({ error: 'Product not found' });
+        }
+
+        product.productQty += quantity;
+        await product.save();
+
         await Order.findOneAndDelete({ transactionID });
-        res.json({ message: 'Order removed successfully.' });
+
+        res.json({ message: 'Order cancelled successfully.' });
     } catch (err) {
-        console.error('Error removing order:', err);
+        console.error('Error cancelling order:', err);
         res.status(500).json({ message: 'Server Error' });
     }
 };
@@ -156,7 +174,6 @@ const generateSalesReport = (orders, period) => {
 const getWeekOfMonth = (date) => {
     const startOfMonth = new Date(date.getFullYear(), date.getMonth(), 1);
     const dayOfMonth = date.getDate();
-    const dayOfWeek = startOfMonth.getDay(); // 0 for Sunday, 1 for Monday, etc.
-    const adjustedDate = dayOfMonth + (dayOfWeek === 0 ? 0 : (7 - dayOfWeek)); // Adjusted to the nearest Sunday
-    return Math.ceil(adjustedDate / 7);
+    const dayOfWeek = startOfMonth.getDay();
+    return Math.ceil((dayOfMonth + dayOfWeek) / 7);
 };
