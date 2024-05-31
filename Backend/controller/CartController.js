@@ -12,7 +12,7 @@ export const getCartItems = async (req, res) => {
 
         const shoppingCart = await Cart.findOne({ user: userId }).populate({
             path: 'items.product',
-            select: 'productName productDesc productType productPrice'
+            select: 'productName productDesc productType productPrice productQty'
         });
 
         if (!shoppingCart) {
@@ -24,7 +24,7 @@ export const getCartItems = async (req, res) => {
         console.error('Error getting cart items:', err);
         res.status(500).json({ message: 'Server Error' });
     }
-};
+};  
 
 
 export const addToCart = async (req, res) => {
@@ -45,20 +45,25 @@ export const addToCart = async (req, res) => {
             return res.status(404).json({ message: 'Product not found.' });
         }
 
-        let cart = await Cart.findOne({ user: userId });
+        let cart = await Cart.findOne({ user: userId }).populate({
+            path: 'items.product',
+            select: 'productName productDesc productType productPrice'
+        });
+
         if (!cart) {
             cart = new Cart({ user: userId, items: [] });
         }
 
-        const existingCartItem = cart.items.find(item => item.product.toString() === productId.toString());
+        const existingCartItemIndex = cart.items.findIndex(item => item.product && item.product._id.toString() === productId);
 
-        if (existingCartItem) {
-            existingCartItem.quantity += quantity;
+        if (existingCartItemIndex !== -1) {
+            cart.items[existingCartItemIndex].quantity += quantity;
         } else {
-            cart.items.push({ product: productId, quantity });
+            cart.items.push({ product: product, quantity });
         }
 
         await cart.save();
+
         res.status(200).json(cart.items);
     } catch (err) {
         console.error('Error adding to cart:', err);
@@ -66,6 +71,45 @@ export const addToCart = async (req, res) => {
     }
 };
 
+export const updateCartItemQuantity = async (req, res) => {
+    try {
+        const token = req.headers.authorization.split(' ')[1];
+        const decodedToken = jwtDecode(token);
+        const userId = decodedToken.userId;
+    
+        const productId = req.params.productId;
+    
+        const { quantity } = req.body;
+    
+        const cart = await Cart.findOne({ user: userId });
+    
+        if (!cart) {
+          return res.status(404).json({ message: 'Shopping cart not found.' });
+        }
+    
+        const itemToUpdate = cart.items.find(item => item.product.toString() === productId);
+        if (itemToUpdate) {
+          const product = await Product.findById(productId);
+          if (!product) {
+            return res.status(404).json({ message: 'Product not found.' });
+          }
+
+          if (quantity > product.productQty) {
+            return res.status(400).json({ message: 'Requested quantity exceeds available quantity.' });
+          }
+
+          itemToUpdate.quantity = quantity;
+          await cart.save();
+    
+          res.status(200).json({ message: 'Item quantity updated successfully.' });
+        } else {
+          return res.status(404).json({ message: 'Product not found in the cart.' });
+        }
+      } catch (err) {
+        console.error('Error updating item quantity:', err);
+        res.status(500).json({ message: 'Server Error' });
+      }
+};
 
 export const removeFromCart = async (req, res) => {
     try {
@@ -94,35 +138,3 @@ export const removeFromCart = async (req, res) => {
         res.status(500).json({ message: 'Server Error' });
     }
 }
-
-
-export const updateCartItemQuantity = async (req, res) => {
-    try {
-        const token = req.headers.authorization.split(' ')[1];
-        const decodedToken = jwtDecode(token);
-        const userId = decodedToken.userId;
-    
-        const productId = req.params.productId;
-    
-        const { quantity } = req.body;
-    
-        const cart = await Cart.findOne({ user: userId });
-    
-        if (!cart) {
-          return res.status(404).json({ message: 'Shopping cart not found.' });
-        }
-    
-        const itemToUpdate = cart.items.find(item => item.product.toString() === productId);
-        if (itemToUpdate) {
-          itemToUpdate.quantity = quantity;
-          await cart.save();
-        } else {
-          return res.status(404).json({ message: 'Product not found in the cart.' });
-        }
-    
-        res.status(200).json({ message: 'Item quantity updated successfully.' });
-      } catch (err) {
-        console.error('Error updating item quantity:', err);
-        res.status(500).json({ message: 'Server Error' });
-      }
-    }
