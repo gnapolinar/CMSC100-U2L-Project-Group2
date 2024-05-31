@@ -79,7 +79,7 @@ h2 {
   display: flex;
   align-items: center;
   text-align: center;
-  margin-right: 13vh; /* Move the input box to the left */
+  margin-right: 13vh;
 }
 
 .product-quantity input {
@@ -94,7 +94,7 @@ h2 {
   padding: 5px 10px;
   cursor: pointer;
   font-size: 0.9em;
-  line-height: 20px; /* Match the line height with the input box */
+  line-height: 20px;
   width: 30px;
 }
 
@@ -105,18 +105,18 @@ h2 {
 .product-price {
   flex: 1;
   text-align: right;
-  margin-right: 19vh; /* Move the price to the left */
+  margin-right: 19vh;
 }
 
 .remove-btn {
   background-color: #ffffff;
   color: #7db03f;
-  border: none; /* Removed border */
+  border: none;
   padding: 5px 10px;
   cursor: pointer;
-  font-size: 0.9em; /* Adjust the font size */
-  width: auto; /* Ensure the width adjusts to the content */
-  min-width: 70px; /* Set a minimum width */
+  font-size: 0.9em;
+  width: auto; 
+  min-width: 70px; 
   text-align: center;
 }
 
