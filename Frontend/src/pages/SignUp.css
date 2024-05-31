@@ -1,56 +1,64 @@
 .signup-container {
-  width: 100%;
-  height: 100vh;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  background-image: url('../pictures/signup_login_background.jpg');
-  background-size: cover;
-  background-position: center;
-}
-
-.signup-form {
-  max-width: 400px;
-  padding: 20px;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-  color: #323131;
-  background-color: #ffffff;
-}
-
-.signup-form h2 {
-  text-align: center; 
-}
-
-.signup-form label {
-  display: block;
-  margin-bottom: 5px;
-  font-weight: bold;
-}
-
-.signup-form input[type="text"],
-.signup-form input[type="password"],
-.signup-form button {
-  width: calc(100% - 20px);
-  padding: 10px;
-  margin-bottom: 10px;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-}
-
-.signup-form button {
-  width: 100%;
-  background-color: #7db03f;
-  color: #fff;
-  border: none;
-  cursor: pointer;
-}
-
-.signup-form button:hover {
-  background-color: #069344;
-}
-
-.error-message {
-  color: red;
-  margin-top: 5px;
-}
+    width: 100%;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-image: url('../pictures/signup_login_background.jpg');
+    background-size: cover;
+    background-position: center;
+  }
+  
+  .fade-in-out {
+    opacity: 0;
+    transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out;
+  }
+  
+  .fade-in-out.active {
+    opacity: 1;
+  }
+  
+  .signup-form {
+    max-width: 400px;
+    padding: 20px;
+    border-radius: 5px;
+    color: #323131;
+    background-color: #ffffff;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  }
+  
+  .signup-form h2 {
+    text-align: center; 
+  }
+  
+  .signup-form label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+  }
+  
+  .signup-form input[type="text"],
+  .signup-form input[type="password"],
+  .signup-form button {
+    width: calc(100% - 20px);
+    padding: 10px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+  }
+  
+  .signup-form button {
+    width: 100%;
+    background-color: #7db03f;
+    color: #fff;
+    cursor: pointer;
+  }
+  
+  .signup-form button:hover {
+    background-color: #069344;
+  }
+  
+  .error-message {
+    color: red;
+    margin-top: 5px;
+  }
