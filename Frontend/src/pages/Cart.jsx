@@ -10,6 +10,11 @@ const Cart = () => {
   const [cartItems, setCartItems] = useState([]);
   const [isConfirmationOpen, setIsConfirmationOpen] = useState(false);
   const [error, setError] = useState(null);
+  const [isActive, setIsActive] = useState(false);
+
+  useEffect(() => {
+    setIsActive(true);
+  }, []);
 
   useEffect(() => {
     fetchCartItems();
@@ -142,7 +147,7 @@ const Cart = () => {
 
   const handleDecreaseQuantity = (productId) => {
     const updatedCartItems = cartItems.map(item =>
-      item.product._id === productId ? { ...item, quantity: Math.max(item.quantity - 1, 0) } : item
+      item.product._id === productId ? { ...item, quantity: Math.max(item.quantity - 1, 1) } : item
     );
     setCartItems(updatedCartItems);
     updateQuantity(productId, updatedCartItems.find(item => item.product._id === productId).quantity);
@@ -157,8 +162,9 @@ const Cart = () => {
   }, 0);
 
   return (
+    <div className={`fade-in-out ${isActive ? "active" : ""}`}>
     <div className="cart-container">
-      <h2>Your Cart</h2>
+      <h2 className="cart-title">My Cart</h2>
       {error && <p className="error">{error}</p>}
       <div className="cart-item-labels">
         <span className="label-product">Product</span>
@@ -170,17 +176,17 @@ const Cart = () => {
           <li key={item.product?._id} className="cart-item">
             {item.product ? (
               <>
-                <span className="product-name">{item.product.productName}</span>
-                <span className="product-quantity">
+                <span className="product-namee">{item.product.productName}</span>
+                <span className="product-quantityy">
                   <button onClick={() => handleDecreaseQuantity(item.product._id)}>-</button>
                   <input
-                    type="number"
+                    type="value"
                     value={item.quantity}
                     onChange={(e) => updateQuantity(item.product._id, parseInt(e.target.value))}
                   />
                   <button onClick={() => handleIncreaseQuantity(item.product._id)}>+</button>
                 </span>
-                <span className="product-price">
+                <span className="product-pricee">
                   ${(item.product.productPrice * item.quantity).toFixed(2)}
                 </span>
                 <button className="remove-btn" onClick={() => removeFromCart(item.product._id)}>Remove</button>
@@ -194,9 +200,13 @@ const Cart = () => {
 
       {cartItems.length > 0 ? (
         <div className="cart-summary">
-          <p>Total Items: <span>{totalItems}</span></p>
-          <p>Total Price: <span>${total.toFixed(2)}</span></p>
-          <button className="confirm-btn" onClick={handleConfirmOrder}>Confirm Order</button>
+          <div className="total">
+            <p>Total Items: <span>{totalItems}</span></p>
+            <p>Total Price: <span>${total.toFixed(2)}</span></p>
+          </div>
+          <div className="button">
+            <button className="confirm-btn" onClick={handleConfirmOrder}>Confirm Order</button>
+          </div>
         </div>
       ) : (
         <p className="empty-cart">The cart is empty. Add now!</p>
@@ -215,6 +225,7 @@ const Cart = () => {
           </div>
         </div>
       )}
+    </div>
     </div>
   );
 };
