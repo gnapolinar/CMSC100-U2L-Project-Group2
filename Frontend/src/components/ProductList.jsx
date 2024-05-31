@@ -1,6 +1,8 @@
+/* eslint-disable no-unused-vars */
 import { useState, useEffect, useCallback } from 'react';
 import PropTypes from 'prop-types';
 import axios from 'axios';
+import './ProductList.css';
 
 const ProductListing = ({ onAddProduct, onDeleteProduct }) => {
   const [products, setProducts] = useState([]);
@@ -10,6 +12,7 @@ const ProductListing = ({ onAddProduct, onDeleteProduct }) => {
     productPrice: '',
     productDesc: '',
     productQty: '',
+    imageUrl: '',
     editIndex: null,
   });
 
@@ -20,6 +23,7 @@ const ProductListing = ({ onAddProduct, onDeleteProduct }) => {
   const [sortOrder, setSortOrder] = useState('asc');
 
   const [showAddProduct, setShowAddProduct] = useState(false);
+  const [overlay, setOverlay] = useState(false);
 
   const compareFunction = useCallback((a, b) => {
     if (a[sortOption] < b[sortOption]) {
@@ -73,7 +77,10 @@ const ProductListing = ({ onAddProduct, onDeleteProduct }) => {
       productPrice: formData.productPrice,
       productDesc: formData.productDesc,
       productQty: formData.productQty,
+      imageUrl: formData.imageUrl,
     };
+
+    setOverlay(true);
 
     try {
       const response = await axios.post('http://localhost:4000/api/products', newProduct);
@@ -85,6 +92,7 @@ const ProductListing = ({ onAddProduct, onDeleteProduct }) => {
         productPrice: '',
         productDesc: '',
         productQty: '',
+        imageUrl: '',
         editIndex: null,
       });
     } catch (err) {
@@ -122,6 +130,7 @@ const ProductListing = ({ onAddProduct, onDeleteProduct }) => {
         productPrice: formData.productPrice,
         productDesc: formData.productDesc,
         productQty: formData.productQty,
+        imageUrl: formData.imageUrl,
     };
 
     try {
@@ -132,15 +141,33 @@ const ProductListing = ({ onAddProduct, onDeleteProduct }) => {
         setFormData({
             productName: '',
             productType: '',
-            productPrice: '', // Clear the price field after updating
+            productPrice: '',
             productDesc: '',
             productQty: '',
+            imageUrl: '',
             editIndex: null,
         });
     } catch (err) {
         setError('Error updating product');
         console.error(err);
     }
+};
+
+const getProductTypeLabel = (type) => {
+  switch (type) {
+    case 1:
+      return 'Staple';
+    case 2:
+      return 'Fruits and Vegetables';
+    case 3:
+      return 'Livestock';
+    case 4:
+      return 'Seafood';
+    case 5:
+      return 'Others';
+    default:
+      return '';
+  }
 };
 
   
@@ -155,20 +182,25 @@ const ProductListing = ({ onAddProduct, onDeleteProduct }) => {
 
   return (
     <div className='main'>
-      <h1 className="dashboard-title breadcrumb">Product Listing</h1>
+      <h1 className="dashboard-title">Product Listing</h1>
 
       <div className="breadcrumb">
-        <label>Sort by:</label>
-        <select value={sortOption} onChange={handleSortOptionChange}>
-          <option value="productName">Name</option>
-          <option value="productType">Type</option>
-          <option value="productPrice">Price</option>
-          <option value="productQty">Quantity</option>
-        </select>
-        <select value={sortOrder} onChange={handleSortOrderChange}>
-          <option value="asc">Ascending</option>
-          <option value="desc">Descending</option>
-        </select>
+        <label>Sort by: </label>
+          <div className="select-wrapper">
+              <select value={sortOption} onChange={handleSortOptionChange}>
+                  <option value="productName">Name</option>
+                  <option value="productType">Type</option>
+                  <option value="productPrice">Price</option>
+                  <option value="productQty">Quantity</option>
+              </select>
+          </div>
+
+          <div className="select-wrapper">
+              <select value={sortOrder} onChange={handleSortOrderChange}>
+                  <option value="asc">Ascending</option>
+                  <option value="desc">Descending</option>
+              </select>
+          </div>
       </div>
 
       <table className="product-listing">
@@ -179,6 +211,7 @@ const ProductListing = ({ onAddProduct, onDeleteProduct }) => {
             <th>Price</th>
             <th>Description</th>
             <th>Quantity</th>
+            <th>Image</th>
             <th>Actions</th>
           </tr>
         </thead>
@@ -196,17 +229,18 @@ const ProductListing = ({ onAddProduct, onDeleteProduct }) => {
                   product.productName
                 )}
               </td>
-              <td>
-                {formData.editIndex === index ? (
-                  <input
-                    type="text"
-                    value={formData.productType}
-                    onChange={(e) => setFormData({ ...formData, productType: e.target.value })}
-                    style={{ width: '50px' }} />
-                ) : (
-                  product.productType
-                )}
-              </td>
+                <td>
+                  {formData.editIndex === index ? (
+                    <input
+                      type="text"
+                      value={formData.productType}
+                      onChange={(e) => setFormData({ ...formData, productType: e.target.value })}
+                      style={{ width: '50px' }}
+                    />
+                  ) : (
+                    getProductTypeLabel(product.productType)
+                  )}
+                </td>
               <td>
                 {formData.editIndex === index ? (
                   <input
@@ -240,6 +274,17 @@ const ProductListing = ({ onAddProduct, onDeleteProduct }) => {
                   product.productQty
                 )}
               </td>
+              <td>
+                {formData.editIndex === index ? (
+                  <input
+                    type="text"
+                    value={formData.imageUrl}
+                    onChange={(e) => setFormData({ ...formData, imageUrl: e.target.value })}
+                    style={{ width: '150px' }} />
+                ) : (
+                  <img src={product.imageUrl} alt={product.productName} className="product-imagee" />
+                )}
+              </td>
               <td className="action-buttons">
                 {formData.editIndex === index ? (
                   <button className="save-button" onClick={() => handleUpdateProduct(index)}>Save</button>
@@ -252,11 +297,13 @@ const ProductListing = ({ onAddProduct, onDeleteProduct }) => {
           ))}
         </tbody>
       </table>
+      <button className="add-button" onClick={toggleAddProduct}>
+  {showAddProduct ? 'Adding...' : 'Add New Product'}
+</button>
 
-      <button className="add-button" onClick={toggleAddProduct}>{showAddProduct ? 'Cancel' : 'Add New Product'}</button>
 {showAddProduct && (
-  <div className="form-popup">
-    <form className="form-container">
+  <div className="overlay">
+    <form className="modal">
       <h3>Add New Product</h3>
       <input
         type="text"
@@ -293,15 +340,27 @@ const ProductListing = ({ onAddProduct, onDeleteProduct }) => {
         value={formData.productQty}
         onChange={(e) => setFormData({ ...formData, productQty: e.target.value })}
       />
-      <button className="add-product-button breadcrumb" nClick={handleAddProduct}>Add Product</button>
+      <input
+        type="text"
+        name="imageUrl"
+        placeholder="Image URL"
+        value={formData.imageUrl}
+        onChange={(e) => setFormData({ ...formData, imageUrl: e.target.value })}
+      />
+      <button className="add-product-button breadcrumb" type="button" onClick={handleAddProduct}>
+        Add Product
+      </button>
+      <button className="add-product-button breadcrumb" type="button" onClick={() => setOverlay(false)}>
+        Cancel
+      </button>
     </form>
   </div>
 )}
 
-      {loading && <div>Loading...</div>}
-      {error && <div>{error}</div>}
-    </div>
-  );
+{loading && <div>Loading...</div>}
+{error && <div>{error}</div>}
+</div>
+);
 };
 
 ProductListing.propTypes = {
