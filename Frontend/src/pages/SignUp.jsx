@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { Cookies } from 'react-cookie';
@@ -14,6 +14,11 @@ const SignUp = () => {
   const [password, setPassword] = useState('');
   const [error] = useState('');
   const navigate = useNavigate();
+  const [isActive, setIsActive] = useState(false);
+
+  useEffect(() => {
+    setIsActive(true);
+  }, []);
 
   useEffect(() => {
     fetchUsers();
@@ -46,6 +51,7 @@ const SignUp = () => {
   };
 
   return (
+    <div className={`fade-in-out ${isActive ? "active" : ""}`}>
     <div className="signup-container">
       <div className='background-image'></div>
       <div className="signup-form">
@@ -63,6 +69,7 @@ const SignUp = () => {
         <button onClick={handleSignup}>Sign Up</button>
         {error && <p className="error-message">{error}</p>}
       </div>
+    </div>
     </div>
   );
 };
