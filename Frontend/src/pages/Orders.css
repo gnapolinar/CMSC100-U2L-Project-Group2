@@ -1,0 +1,90 @@
+.orders-container {
+    max-width: 800px;
+    margin: 0 auto;
+    margin-top: 15vh;
+    margin-bottom: 5vh;
+    padding: 20px;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    background-color: #fff;
+  }
+  
+  .fade-in-out {
+    opacity: 0;
+    transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out;
+  }
+  
+  .fade-in-out.active {
+    opacity: 1;
+  }
+  
+  .orders-title {
+    text-align: center;
+    margin-top: 10px;
+    margin-bottom: 20px;
+    font-size: 28px;
+    font-weight: bold;
+    color: #333;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+  
+  .loading {
+    text-align: center;
+    font-size: 1.2em;
+    color: #555;
+  }
+  
+  .order-details {
+    border-radius: 5px;
+    margin-bottom: 10px;
+    padding: 10px;
+    background-color: #f9f9f9;
+    border: none;
+  }
+  
+  .order-summaryy {
+    font-weight: bold;
+    font-size: 1em;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 2px 10px;
+  }
+  
+  .order-summaryy::before {
+    content: none !important;
+  }
+  
+  .order-list {
+    list-style: none;
+    padding: 0;
+    margin: 10px 0 0 0;
+  }
+  
+  .order-item {
+    display: flex;
+    flex-direction: column;
+    padding: 10px;
+    border-bottom: 1px solid #ddd;
+  }
+  
+  .order-item:last-child {
+    border-bottom: none;
+  }
+  
+  .order-product, .order-quantity, .order-price, .order-status {
+    font-size: 1em;
+    color: #333;
+    text-align: center;
+  }
+  
+  .order-product {
+    font-weight: bold;
+  }
+  
+  .order-quantity, .order-price, .order-status {
+    color: #666;
+  }
