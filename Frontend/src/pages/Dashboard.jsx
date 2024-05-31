@@ -1,5 +1,4 @@
 import { useState } from 'react';
-import Management from '../components/Management'
 import ProductList from '../components/ProductList'
 
 const Dashboard = () => {
@@ -17,7 +16,6 @@ const Dashboard = () => {
 
   return (
     <div>
-        <Management />
         <ProductList
             products={products}
             onAddProduct={handleAddProduct}

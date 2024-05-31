@@ -6,10 +6,12 @@ export default function SalesReports() {
     monthlyReport: {},
     annualReport: {}
   });
+  const [orders, setOrders] = useState([]);
   const [period, setPeriod] = useState('weekly');
   const [selectedWeek, setSelectedWeek] = useState('');
   const [selectedMonth, setSelectedMonth] = useState('');
   const [selectedYear, setSelectedYear] = useState('');
+  const [years, setYears] = useState([]);
 
   useEffect(() => {
     const fetchSalesReport = async () => {
@@ -23,12 +25,43 @@ export default function SalesReports() {
           monthlyReport: data.monthlyReport,
           annualReport: data.annualReport
         });
+
+        // Determine the range of years from the data
+        const allYears = new Set();
+        Object.keys(data.weeklyReport).forEach((date) => {
+          const year = new Date(date).getFullYear();
+          if (!isNaN(year)) allYears.add(year);
+        });
+        Object.keys(data.monthlyReport).forEach((date) => {
+          const year = new Date(date).getFullYear();
+          if (!isNaN(year)) allYears.add(year);
+        });
+        Object.values(data.annualReport).forEach((annual) => {
+          const year = parseInt(annual.year, 10);
+          if (!isNaN(year)) allYears.add(year);
+        });
+
+        const sortedYears = [...allYears].sort((a, b) => a - b);
+        console.log("Years:", sortedYears);
+        setYears(sortedYears);
       } catch (error) {
         console.error('Error fetching sales report:', error);
       }
     };
 
+    const fetchOrders = async () => {
+      try {
+        const response = await fetch(`http://localhost:4000/api/orders`);
+        if (!response.ok) throw new Error('Failed to fetch orders');
+        const data = await response.json();
+        setOrders(data);
+      } catch (error) {
+        console.error('Error fetching orders:', error);
+      }
+    };
+
     fetchSalesReport();
+    fetchOrders();
   }, []);
 
   const handlePeriodChange = (event) => {
@@ -55,7 +88,12 @@ export default function SalesReports() {
     let weekCounter = 1;
 
     while (date.getMonth() === month - 1) {
-      weeks.push(`w${weekCounter}-${year}-${month.toString().padStart(2, '0')}`);
+      weeks.push({
+        label: `Week ${weekCounter}`,
+        value: `w${weekCounter}-${year}-${month.toString().padStart(2, '0')}`,
+        start: new Date(date),
+        end: new Date(date.getFullYear(), date.getMonth(), date.getDate() + 6)
+      });
       date.setDate(date.getDate() + 7);
       weekCounter++;
     }
@@ -63,32 +101,75 @@ export default function SalesReports() {
     return weeks;
   };
 
+  const formatDateRange = (start, end) => {
+    const options = { month: 'long', day: 'numeric', year: 'numeric' };
+    const startFormatted = start.toLocaleDateString(undefined, options);
+    const endFormatted = end.toLocaleDateString(undefined, options);
+    return `${startFormatted} - ${endFormatted}`;
+  };
+
+  const filterOrdersByPeriod = (orders, period, selectedWeek, selectedMonth, selectedYear) => {
+    if (!selectedYear || !selectedWeek) return [];
+  
+    // Find the start and end dates of the selected week
+    const selectedWeekObj = getWeeksInMonth(selectedYear, selectedMonth).find(week => week.value === selectedWeek);
+    if (!selectedWeekObj) return [];
+  
+    const startDate = new Date(selectedWeekObj.start.getTime());
+    const endDate = new Date(selectedWeekObj.end.getTime());
+  
+    // Filter orders based on the selected week
+    return orders.filter(order => {
+      const orderDate = new Date(order.dateOrdered);
+      return orderDate >= startDate && orderDate <= endDate;
+    });
+  };
+  
+  
+
   const renderReport = (report, period, selectedWeek, selectedMonth, selectedYear) => {
     let selectedPeriod = '';
+    let title = '';
+  
     if (period === 'weekly') {
+      const selectedWeekObj = selectedWeek && getWeeksInMonth(selectedYear, selectedMonth).find(week => week.value === selectedWeek);
       selectedPeriod = selectedWeek;
+      if (selectedWeekObj) {
+        const startSunday = new Date(selectedWeekObj.start.getTime());
+        startSunday.setDate(startSunday.getDate() - startSunday.getDay());
+        const endSaturday = new Date(startSunday.getTime());
+        endSaturday.setDate(startSunday.getDate() + 6);
+        title = `Sales Report for ${formatDateRange(startSunday, endSaturday)}`;
+      }
     } else if (period === 'monthly') {
       selectedPeriod = `${selectedYear}-${selectedMonth}`;
+      if (selectedYear && selectedMonth) {
+        const monthName = new Date(selectedYear, selectedMonth - 1).toLocaleString('default', { month: 'long' });
+        title = `Sales Report for ${monthName} ${selectedYear}`;
+      }
     } else if (period === 'annual') {
       selectedPeriod = selectedYear;
+      if (selectedYear) {
+        title = `Sales Report for ${selectedYear}`;
+      }
     }
-
-    console.log("Selected Period:", selectedPeriod);
-    console.log("Report:", report);
-    console.log("Report[Period]:", report[`${period}Report`]);
-
+  
     const reportData = report[`${period}Report`] || {};
     const summary = reportData[selectedPeriod];
-
+  
     if (!selectedPeriod || !summary) {
       return <p>No sales report available.</p>;
     }
-
+  
+    const filteredOrders = filterOrdersByPeriod(orders, period, selectedWeek, selectedMonth, selectedYear);
+    console.log("FilteredOrders:", filteredOrders);
+  
     return (
       <div>
-        <h3>{period.charAt(0).toUpperCase() + period.slice(1)} Sales Report for {selectedPeriod}</h3>
+        <h3>{title}</h3>
         <p>Total Sales: {summary.totalSales}</p>
-        <h4>Products:</h4>
+        <p>Total Orders: {summary.totalOrders}</p>
+        <h4>Products Sold:</h4>
         <ul>
           {Object.entries(summary.products).map(([productId, product]) => (
             <li key={productId}>
@@ -104,8 +185,8 @@ export default function SalesReports() {
   };
 
   return (
-    <div>
-      <h1>Sales Reports</h1>
+    <div className='main'>
+      <h1>Sales Report</h1>
       <div>
         <label htmlFor="period">Select Period: </label>
         <select id="period" value={period} onChange={handlePeriodChange}>
@@ -126,14 +207,19 @@ export default function SalesReports() {
             ))}
           </select>
           <label htmlFor="year">Select Year: </label>
-          <input type="number" id="year" value={selectedYear} onChange={handleDateChange} placeholder="YYYY" />
+          <select id="year" value={selectedYear} onChange={handleDateChange}>
+            <option value="">--Select Year--</option>
+            {years.map((year) => (
+              <option key={year} value={String(year)}>{String(year)}</option>
+            ))}
+          </select>
           {selectedMonth && selectedYear && (
             <div>
               <label htmlFor="week">Select Week: </label>
               <select id="week" value={selectedWeek} onChange={handleDateChange}>
                 <option value="">--Select Week--</option>
                 {getWeeksInMonth(selectedYear, selectedMonth).map((week) => (
-                  <option key={week} value={week}>{week}</option>
+                  <option key={week.value} value={week.value}>{week.label}</option>
                 ))}
               </select>
             </div>
@@ -152,13 +238,23 @@ export default function SalesReports() {
             ))}
           </select>
           <label htmlFor="year">Select Year: </label>
-          <input type="number" id="year" value={selectedYear} onChange={handleDateChange} placeholder="YYYY" />
+          <select id="year" value={selectedYear} onChange={handleDateChange}>
+            <option value="">--Select Year--</option>
+            {years.map((year) => (
+              <option key={year} value={String(year)}>{String(year)}</option>
+            ))}
+          </select>
         </div>
       )}
       {period === 'annual' && (
         <div>
           <label htmlFor="year">Select Year: </label>
-          <input type="number" id="year" value={selectedYear} onChange={handleDateChange} placeholder="YYYY" />
+          <select id="year" value={selectedYear} onChange={handleDateChange}>
+            <option value="">--Select Year--</option>
+            {years.map((year) => (
+              <option key={year} value={String(year)}>{String(year)}</option>
+            ))}
+          </select>
         </div>
       )}
       {renderReport(report, period, selectedWeek, selectedMonth, selectedYear)}

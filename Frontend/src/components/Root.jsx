@@ -104,8 +104,10 @@ export default function Root() {
                                 )}
                                 {userType === 'merchant' && (
                                     <>
-                                        <li><Link to={`/dashboard`}>Dashboard</Link></li>
+                                        <li><Link to={`/dashboard`}>Products</Link></li>
+                                        <li><Link to={`/manageusers`}>Users</Link></li>
                                         <li><Link to={`/merchantorders`}>Orders</Link></li>
+                                        <li><Link to={`/salesreports`}>Sales Report</Link></li>
                                         <li><Link to={`/account`}>Account</Link></li>
                                     </>
                                 )}

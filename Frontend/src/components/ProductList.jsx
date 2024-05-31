@@ -154,8 +154,8 @@ const ProductListing = ({ onAddProduct, onDeleteProduct }) => {
   }
 
   return (
-    <div>
-      <h2 className="dashboard-title breadcrumb">Product Listing</h2>
+    <div className='main'>
+      <h1 className="dashboard-title breadcrumb">Product Listing</h1>
 
       <div className="breadcrumb">
         <label>Sort by:</label>
